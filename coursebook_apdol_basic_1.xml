@@ -1,0 +1,66 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#00000000">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/apdol_title1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-앞돌리기 정석 1-"
+            android:textSize="20dp"
+            android:textColor="#ffffffff"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"/>
+        <TextView
+            android:id="@+id/apdol_title1_explain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="제2목적구의 위치변화 "
+            android:textSize="15dp"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:layout_below="@+id/apdol_title1"
+            android:layout_alignStart="@+id/apdol_title1" />
+
+        <Button
+            android:id="@+id/coursebook_apdol_button_1"
+            android:layout_below="@id/apdol_title1_explain"
+            android:layout_alignStart="@id/apdol_title1_explain"
+            android:layout_marginTop="50dp"
+            android:layout_width="100dp"
+            android:layout_height="200dp"
+            android:background="#00ffffff"
+            android:onClick="CourseBook_apdol_wide"/>
+        <ImageView
+            android:layout_alignTop="@id/coursebook_apdol_button_1"
+            android:layout_alignStart="@id/coursebook_apdol_button_1"
+            android:layout_width="100dp"
+            android:layout_height="200dp"
+            android:src="@drawable/f1_noline"/>
+
+        <Button
+            android:id="@+id/coursebook_apdol_button_2"
+            android:layout_alignTop="@id/coursebook_apdol_button_1"
+            android:layout_toRightOf="@id/coursebook_apdol_button_1"
+            android:layout_marginLeft="20dp"
+            android:layout_width="100dp"
+            android:layout_height="200dp"
+            android:background="#00ffffff"
+            android:onClick="CourseBook_apdol_wide"/>
+        <ImageView
+            android:layout_alignTop="@id/coursebook_apdol_button_2"
+            android:layout_alignLeft="@id/coursebook_apdol_button_2"
+            android:layout_width="100dp"
+            android:layout_height="200dp"
+            android:src="@drawable/f2_noline"/>
+        </RelativeLayout>
+</LinearLayout>

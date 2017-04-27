@@ -1,0 +1,112 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffffff">
+
+    <FrameLayout
+        android:layout_width="170dp"
+        android:layout_height="340dp">
+        <ImageSwitcher
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/coursebook_apdol_basic_wide_imageswitcher">
+        </ImageSwitcher>
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GBN"
+            android:textSize="30dp"
+            android:textColor="#ff000000"
+            android:textStyle="bold"
+            android:layout_marginTop="15dp"/>
+
+        <FrameLayout
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="10dp">
+            <ImageSwitcher
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/coursebook_apdol_basic_wide_value_imageswitcher">
+            </ImageSwitcher>
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="두       께 :  "
+                android:textSize="10dp"
+                android:textColor="#ff000000"/>
+            <TextView
+                android:id="@+id/coursebook_apdol_basic_wide_thick_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="10dp"
+                android:textColor="#ff000000"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="당점 / 팁 :  "
+                android:textSize="10dp"
+                android:textColor="#ff000000"/>
+            <TextView
+                android:id="@+id/coursebook_apdol_basic_wide_pointntip_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="10dp"
+                android:textColor="#ff000000"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="스트로크 :  "
+                android:textSize="10dp"
+                android:textColor="#ff000000"/>
+            <TextView
+                android:id="@+id/coursebook_apdol_basic_wide_strock_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="10dp"
+                android:textColor="#ff000000"/>
+        </LinearLayout>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/youtube_button"
+            android:layout_marginTop="20dp"
+            android:background="#00000000"
+            android:onClick="coursebook_youtube"/>
+
+    </LinearLayout>
+
+</LinearLayout>

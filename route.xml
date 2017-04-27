@@ -1,0 +1,75 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:background="@drawable/main_background_nologo">
+
+    <ImageButton
+        android:id="@+id/button_sidespin"
+        android:onClick="onClick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:background="#00000000"
+        android:layout_gravity="center"
+        android:textAlignment="center"
+        android:src="@drawable/sidespin"/>
+
+    <ImageButton
+        android:id="@+id/button_frontspin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:onClick="onClick"
+        android:background="#00000000"
+        android:layout_gravity="center"
+        android:textAlignment="center"
+        android:src="@drawable/frontspin"/>
+
+            <ImageButton
+                android:id="@+id/button_backspin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:onClick="onClick"
+                android:background="#00000000"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:src="@drawable/backspin"/>
+
+            <ImageButton
+                android:id="@+id/button_scratch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:onClick="onClick"
+                android:background="#00000000"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:src="@drawable/scratch"/>
+
+            <ImageButton
+                android:id="@+id/button_hang"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:onClick="onClick"
+                android:background="#00000000"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:src="@drawable/ggeoga"/>
+
+            <ImageButton
+                android:id="@+id/button_traverse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:onClick="onClick"
+                android:background="#00000000"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:src="@drawable/traverse"/>
+
+</LinearLayout>

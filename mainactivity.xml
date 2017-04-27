@@ -1,0 +1,39 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:background="@drawable/main_background">
+
+    <ImageButton
+        android:id="@+id/button_start"
+        android:onClick="onClick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="130dp"
+        android:src="@drawable/trainningstart"
+        android:background="#00000000"/>
+
+    <ImageButton
+        android:id="@+id/button_coursebook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_gravity="center"
+        android:onClick="onClick"
+        android:src="@drawable/coursebook"
+        android:background="#00000000"/>
+
+    <ImageButton
+        android:id="@+id/button_scorecompute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_gravity="center"
+        android:onClick="onClick"
+        android:src="@drawable/score_compute"
+        android:background="#00000000"/>
+</LinearLayout>

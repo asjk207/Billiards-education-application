@@ -1,0 +1,85 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#00000000">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/dwidol_title2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-뒤돌리기 정석 2-"
+            android:textSize="20dp"
+            android:textColor="#ffffffff"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_below="@+id/coursebook_dwidol_button_4"/>
+
+        <TextView
+            android:id="@+id/dwidol_title2_explain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="수구의 위치변화"
+            android:textSize="15dp"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:layout_below="@+id/dwidol_title2"
+            android:layout_alignStart="@+id/dwidol_title2" />
+
+
+        <Button
+            android:id="@+id/coursebook_dwidol_button_5"
+            android:layout_below="@id/dwidol_title2_explain"
+            android:layout_alignStart="@id/dwidol_title2_explain"
+            android:layout_marginTop="50dp"
+            android:layout_width="100dp"
+            android:layout_height="200dp"
+            android:background="#00ffffff"
+            android:onClick="CourseBook_dwidol_wide"/>
+        <ImageView
+            android:layout_alignTop="@id/coursebook_dwidol_button_5"
+            android:layout_alignStart="@id/coursebook_dwidol_button_5"
+            android:layout_width="100dp"
+            android:layout_height="200dp"
+            android:src="@drawable/ba5_noline"/>
+
+        <Button
+            android:id="@+id/coursebook_dwidol_button_6"
+            android:layout_alignTop="@id/coursebook_dwidol_button_5"
+            android:layout_toRightOf="@id/coursebook_dwidol_button_5"
+            android:layout_marginLeft="20dp"
+            android:layout_width="100dp"
+            android:layout_height="200dp"
+            android:background="#00ffffff"
+            android:onClick="CourseBook_dwidol_wide"/>
+        <ImageView
+            android:layout_alignTop="@id/coursebook_dwidol_button_6"
+            android:layout_alignLeft="@id/coursebook_dwidol_button_6"
+            android:layout_width="100dp"
+            android:layout_height="200dp"
+            android:src="@drawable/ba6_noline"/>
+
+        <Button
+            android:id="@+id/coursebook_dwidol_button_7"
+            android:layout_alignTop="@id/coursebook_dwidol_button_6"
+            android:layout_toRightOf="@id/coursebook_dwidol_button_6"
+            android:layout_marginLeft="20dp"
+            android:layout_width="100dp"
+            android:layout_height="200dp"
+            android:background="#00ffffff"
+            android:onClick="CourseBook_dwidol_wide"/>
+        <ImageView
+            android:layout_alignTop="@id/coursebook_dwidol_button_7"
+            android:layout_alignLeft="@id/coursebook_dwidol_button_7"
+            android:layout_width="100dp"
+            android:layout_height="200dp"
+            android:src="@drawable/ba7_noline"/>
+        </RelativeLayout>
+</LinearLayout>

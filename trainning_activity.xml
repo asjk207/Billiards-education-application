@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/Relative"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_tile">
+
+    <view
+        android:id="@+id/TrainningView"
+        android:layout_width="287dp"
+        android:layout_height="575dp"
+        class="com.example.user.billardtrainningapplication.TrainnigView"
+        android:layout_alignParentLeft="true" />
+
+    //메뉴UI
+    <ImageButton
+        android:id="@+id/menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/thick"
+        android:layout_marginTop="20dp"
+        android:onClick="onClick2"
+        android:src="@drawable/menu"
+        android:layout_alignParentRight="true"
+        android:background="#00000000"/>
+
+    <FrameLayout
+        android:id="@+id/frame_layout"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="30dp"
+        android:foregroundGravity="center"
+        android:layout_alignLeft="@+id/thick"
+        android:layout_below="@+id/menu">
+        <ImageSwitcher
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/main_imageswitcher">
+        </ImageSwitcher>
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/stroke_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/thick"
+        android:layout_below="@+id/frame_layout"
+        android:text="스트로크"
+        android:textSize="10dp"
+        android:textStyle="bold"/>
+
+    <ImageButton
+        android:id="@+id/thick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onClick2"
+        android:src="@drawable/thick_icon_s"
+        android:background="#00000000"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="50dp"
+        android:layout_below="@+id/stroke_text" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/thick"
+        android:layout_alignLeft="@+id/thick"
+        android:text="두께"
+        android:textColor="#ff000000"
+        android:textStyle="bold"
+        android:textSize="15dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="25dp"/>
+
+
+    <ImageButton
+        android:id="@+id/pointntip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onClick2"
+        android:src="@drawable/pointntip_icon_s"
+        android:background="#00000000"
+        android:layout_below="@+id/thick"
+        android:layout_alignLeft="@+id/thick"
+        android:layout_marginTop="15dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/pointntip"
+        android:layout_alignLeft="@+id/pointntip"
+        android:text="당점/팁"
+        android:textColor="#ff000000"
+        android:textStyle="bold"
+        android:textSize="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="25dp"/>
+
+    <ImageButton
+        android:id="@+id/stroke"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onClick2"
+        android:src="@drawable/stroke_icon_s"
+        android:background="#00000000"
+        android:layout_below="@+id/pointntip"
+        android:layout_alignLeft="@+id/thick"
+        android:layout_marginTop="15dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/stroke"
+        android:layout_alignLeft="@+id/stroke"
+        android:text="스트로크"
+        android:textColor="#ff000000"
+        android:textStyle="bold"
+        android:textSize="15dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginTop="25dp"/>
+
+    <ImageButton
+        android:id="@+id/next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/TrainningView"
+        android:layout_alignParentEnd="true"
+        android:background="#00000000"
+        android:src="@drawable/button_next"
+        android:layout_marginTop="5dp"
+        android:onClick="onClick2" />
+
+    <ImageButton
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/TrainningView"
+        android:layout_toLeftOf="@+id/next"
+        android:background="#00000000"
+        android:src="@drawable/button_prev"
+        android:layout_marginTop="5dp"
+        android:onClick="onClick2" />
+
+    <FrameLayout
+        android:id="@+id/right_wrong_frame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/back"
+        android:layout_alignParentStart="true">
+    <ImageSwitcher
+        android:id="@+id/right_wrong_imageswitcher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    </ImageSwitcher>
+        <Button
+            android:id="@+id/right_wrong"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:onClick="onClick2" />
+    </FrameLayout>
+
+    <ImageButton
+        android:id="@+id/play_animation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/button_play"
+        android:background="#00000000"
+        android:layout_toRightOf="@+id/right_wrong_frame"
+        android:layout_alignTop="@+id/right_wrong_frame"
+        android:layout_marginLeft="15dp"
+        android:onClick="Play"
+        android:visibility="invisible"
+        android:enabled="false"/>
+
+    <ImageButton
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/pro_button"
+        android:layout_toRightOf="@+id/play_animation"
+        android:layout_alignTop="@+id/right_wrong_frame"
+        android:layout_below="@+id/TrainningView"
+        android:layout_marginLeft="20dp"
+        android:src="@drawable/youtube_button"
+        android:background="#00000000"
+        android:onClick="onClickyoutube"/>
+
+
+</RelativeLayout>

@@ -4,25 +4,31 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.mainactivity);
 
-        Button b = (Button)findViewById(R.id.button);
-        b.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(
-                        getApplicationContext(),
-                        TrainningActivity.class);
-                startActivity(intent);
 
-            }
-        });
+    }
+    public void onClick(View view){
+        switch (view.getId()) {
+            case R.id.button_start:
+                GlobalVariable.Menu_Switcher=0;
+                Intent Difficulty_intent = new Intent(this, Difficulty.class);
+                startActivity(Difficulty_intent);
+                break;
+            case R.id.button_coursebook:
+                GlobalVariable.Menu_Switcher=0;
+                Intent Coursebook_intent = new Intent(this, CourseBook_Route.class);
+                startActivity(Coursebook_intent);
+                break;
+            case R.id.button_scorecompute:
+                Intent Scorecompute_Intent = new Intent(this,ScoreCompute.class);
+                startActivity(Scorecompute_Intent);
+
+        }
     }
 }

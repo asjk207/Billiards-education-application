@@ -14,6 +14,12 @@ public class BallVariable {
         this.thick=thick;
         this.tip=tip;
     }
+    public void setThick(int thick){
+        this.thick=thick;
+    }
+    public void setTip(int tip){
+        this.tip=tip;
+    }
 
     public int getThick() {
         return thick;

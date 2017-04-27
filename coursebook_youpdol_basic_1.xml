@@ -1,0 +1,99 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#00000000">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/youpdol_title1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-옆돌리기 정석 1-"
+            android:textSize="20dp"
+            android:textColor="#ffffffff"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"/>
+        <TextView
+            android:id="@+id/youpdol_title1_explain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1적구의 위치변화"
+            android:textSize="15dp"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:layout_below="@+id/youpdol_title1"
+            android:layout_alignStart="@+id/youpdol_title1" />
+
+        <Button
+            android:id="@+id/coursebook_youpdol_button_1"
+            android:layout_below="@id/youpdol_title1_explain"
+            android:layout_alignStart="@id/youpdol_title1_explain"
+            android:layout_marginTop="50dp"
+            android:layout_width="100dp"
+            android:layout_height="200dp"
+            android:background="#00ffffff"
+            android:onClick="CourseBook_youpdol_basic_wide"/>
+        <ImageView
+            android:id="@+id/coursebook_youpdol_button_1_image"
+            android:layout_alignTop="@id/coursebook_youpdol_button_1"
+            android:layout_alignStart="@id/coursebook_youpdol_button_1"
+            android:layout_width="100dp"
+            android:layout_height="200dp"
+            android:src="@drawable/y1_noline"/>
+
+        <Button
+            android:id="@+id/coursebook_youpdol_button_2"
+            android:layout_alignTop="@id/coursebook_youpdol_button_1"
+            android:layout_toRightOf="@id/coursebook_youpdol_button_1"
+            android:layout_marginLeft="20dp"
+            android:layout_width="100dp"
+            android:layout_height="200dp"
+            android:background="#00ffffff"
+            android:onClick="CourseBook_youpdol_basic_wide"/>
+        <ImageView
+            android:layout_alignTop="@id/coursebook_youpdol_button_2"
+            android:layout_alignLeft="@id/coursebook_youpdol_button_2"
+            android:layout_width="100dp"
+            android:layout_height="200dp"
+            android:src="@drawable/y2_noline"/>
+
+        <Button
+            android:id="@+id/coursebook_youpdol_button_3"
+            android:layout_alignTop="@id/coursebook_youpdol_button_1"
+            android:layout_toRightOf="@id/coursebook_youpdol_button_2"
+            android:layout_marginLeft="20dp"
+            android:layout_width="100dp"
+            android:layout_height="200dp"
+            android:background="#00ffffff"
+            android:onClick="CourseBook_youpdol_basic_wide"/>
+        <ImageView
+            android:layout_alignTop="@id/coursebook_youpdol_button_3"
+            android:layout_alignLeft="@id/coursebook_youpdol_button_3"
+            android:layout_width="100dp"
+            android:layout_height="200dp"
+            android:src="@drawable/y3_noline"/>
+
+        <Button
+            android:id="@+id/coursebook_youpdol_button_4"
+            android:layout_below="@id/coursebook_youpdol_button_1"
+            android:layout_alignLeft="@id/coursebook_youpdol_button_1"
+            android:layout_marginTop="10dp"
+            android:layout_width="100dp"
+            android:layout_height="200dp"
+            android:background="#00ffffff"
+            android:onClick="CourseBook_youpdol_basic_wide"/>
+        <ImageView
+            android:layout_alignTop="@id/coursebook_youpdol_button_4"
+            android:layout_alignLeft="@id/coursebook_youpdol_button_4"
+            android:layout_width="100dp"
+            android:layout_height="200dp"
+            android:src="@drawable/y4_noline"/>
+        </RelativeLayout>
+</LinearLayout>

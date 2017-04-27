@@ -1,0 +1,65 @@
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:background="#FF000000">
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <RadioButton
+            android:text="일반 스트로크"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/normal_strock"
+            android:onClick="onClick" />
+        <RadioButton
+            android:text="부드러운 스트로크"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/smooth_strock"
+            android:onClick="onClick" />
+        <RadioButton
+            android:text="부드럽게 밀어치는 스트로크"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/smoothNpush_strock"
+            android:onClick="onClick" />
+        <RadioButton
+            android:text="부드럽게 끊어치는 스트로크"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/smoothNcut_strock"
+            android:onClick="onClick" />
+        <RadioButton
+            android:text="강력하게 밀어치는 스트로크"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/powerNpush_strock"
+            android:onClick="onClick" />
+        <RadioButton
+            android:text="강력하게 끊어치는 스트로크"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/powerNcut_strock"
+            android:onClick="onClick" />
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+    <Button
+        android:id="@+id/s_checkbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00000000"
+        android:text="확인"
+        android:layout_gravity="center_horizontal"
+        android:onClick="onClick" />
+        </LinearLayout>
+
+</LinearLayout>

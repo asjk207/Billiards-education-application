@@ -1,0 +1,123 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_background_nologo"
+    android:padding="20dp">
+
+    <ImageButton
+        android:id="@+id/lv1"
+        android:onClick="onClick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:background="#00000000"
+        android:src="@drawable/lv1"/>
+
+    <ImageButton
+        android:id="@+id/lv2"
+        android:layout_toRightOf="@+id/lv1"
+        android:layout_alignTop="@+id/lv1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:onClick="onClick"
+        android:background="#00000000"
+        android:layout_gravity="center"
+        android:src="@drawable/lv2"/>
+
+    <ImageButton
+        android:id="@+id/lv3"
+        android:layout_toRightOf="@+id/lv2"
+        android:layout_alignTop="@+id/lv1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:onClick="onClick"
+        android:background="#00000000"
+        android:layout_gravity="center"
+        android:src="@drawable/lv3"/>
+
+            <ImageButton
+                android:id="@+id/lv4"
+                android:layout_below="@+id/lv1"
+                android:layout_alignLeft="@+id/lv1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:background="#00000000"
+                android:layout_gravity="center"
+                android:src="@drawable/lv4"/>
+
+            <ImageButton
+                android:id="@+id/lv5"
+                android:layout_toRightOf="@+id/lv4"
+                android:layout_alignLeft="@+id/lv2"
+                android:layout_below="@+id/lv1"
+                android:layout_alignTop="@+id/lv4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:layout_gravity="center"
+                android:src="@drawable/lv5"/>
+
+            <ImageButton
+                android:id="@+id/lv6"
+                android:layout_toRightOf="@+id/lv5"
+                android:layout_alignLeft="@+id/lv3"
+                android:layout_below="@+id/lv1"
+                android:layout_alignTop="@+id/lv4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:layout_gravity="center"
+                android:src="@drawable/lv6"/>
+
+            <ImageButton
+                android:id="@+id/lv7"
+                android:layout_below="@+id/lv4"
+                android:layout_alignLeft="@+id/lv1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:background="#00000000"
+                android:layout_gravity="center"
+                android:src="@drawable/lv7"/>
+
+            <ImageButton
+                android:id="@+id/lv8"
+                android:layout_toRightOf="@+id/lv7"
+                android:layout_alignLeft="@+id/lv5"
+                android:layout_below="@+id/lv5"
+                android:layout_alignTop="@+id/lv7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:layout_gravity="center"
+                android:src="@drawable/lv8"/>
+
+            <ImageButton
+                android:id="@+id/lv9"
+                android:layout_toRightOf="@+id/lv8"
+                android:layout_alignLeft="@+id/lv6"
+                android:layout_below="@+id/lv6"
+                android:layout_alignTop="@+id/lv7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:layout_gravity="center"
+                android:src="@drawable/lv9"/>
+
+            <ImageButton
+                android:id="@+id/lv10"
+                android:layout_below="@+id/lv7"
+                android:layout_alignLeft="@+id/lv1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:background="#00000000"
+                android:layout_gravity="center"
+                android:src="@drawable/lv10"/>
+
+</RelativeLayout>

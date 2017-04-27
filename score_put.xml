@@ -1,0 +1,147 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="380dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog_background">
+
+    <RelativeLayout
+        android:id="@+id/score_input_board"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/score_input_board">
+
+    <ImageButton
+    android:id="@+id/number_0"
+    android:layout_width="70dp"
+    android:layout_height="80dp"
+    android:src="@drawable/number_0"
+    android:background="#00000000"
+        android:onClick="inputScore"/>
+
+    <ImageButton
+        android:id="@+id/number_1"
+        android:layout_toRightOf="@+id/number_0"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/number_1"
+        android:background="#00000000"
+        android:onClick="inputScore"/>
+
+    <ImageButton
+        android:id="@+id/number_2"
+        android:layout_toRightOf="@+id/number_1"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/number_2"
+        android:background="#00000000"
+        android:onClick="inputScore"/>
+
+    <ImageButton
+        android:id="@+id/number_3"
+        android:layout_toRightOf="@+id/number_2"
+        android:layout_width="70dp"
+        android:layout_height="80dp"
+        android:src="@drawable/number_3"
+        android:background="#00000000"
+        android:onClick="inputScore"/>
+
+    <ImageButton
+        android:id="@+id/number_4"
+        android:layout_toRightOf="@+id/number_3"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/number_4"
+        android:background="#00000000"
+        android:onClick="inputScore"/>
+
+    <ImageButton
+        android:id="@+id/number_5"
+        android:layout_below="@+id/number_0"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/number_5"
+        android:background="#00000000"
+        android:onClick="inputScore"/>
+
+    <ImageButton
+        android:id="@+id/number_6"
+        android:layout_below="@+id/number_0"
+        android:layout_toRightOf="@+id/number_5"
+        android:layout_width="70dp"
+        android:layout_height="80dp"
+        android:src="@drawable/number_6"
+        android:background="#00000000"
+        android:onClick="inputScore"/>
+
+    <ImageButton
+        android:id="@+id/number_7"
+        android:layout_below="@+id/number_0"
+        android:layout_toRightOf="@+id/number_6"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/number_7"
+        android:background="#00000000"
+        android:onClick="inputScore"/>
+
+    <ImageButton
+        android:id="@+id/number_8"
+        android:layout_below="@+id/number_0"
+        android:layout_toRightOf="@+id/number_7"
+        android:layout_width="70dp"
+        android:layout_height="80dp"
+        android:src="@drawable/number_8"
+        android:background="#00000000"
+        android:onClick="inputScore"/>
+
+    <ImageButton
+        android:id="@+id/number_9"
+        android:layout_below="@+id/number_0"
+        android:layout_toRightOf="@+id/number_8"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/number_9"
+        android:background="#00000000"
+        android:onClick="inputScore"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/score_input_linear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/score_input_board"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="130dp"
+        android:background="@drawable/score_total"
+        android:gravity="center">
+    <TextView
+        android:id="@+id/score_input_total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="score"
+        android:textSize="30dp"
+        android:textColor="#ffffffff"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/score_input_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/score_input_linear"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="100dp"
+        android:background="#00000000"
+        android:text="취소"
+        android:onClick="onClick"/>
+
+    <Button
+        android:id="@+id/score_input_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/score_input_cancel"
+        android:layout_toRightOf="@+id/score_input_cancel"
+        android:background="#00000000"
+        android:text="확인"
+        android:onClick="onClick"/>
+
+</RelativeLayout>

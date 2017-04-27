@@ -1,0 +1,48 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/gradeition">
+    <ImageButton
+        android:id="@+id/difficulty_choose"
+        android:onClick="onClicked"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/menu_difficulty_icon"
+        android:background="#00000000"
+        android:layout_gravity="center"/>
+
+    <ImageButton
+        android:id="@+id/route_choose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:onClick="onClicked"
+        android:src="@drawable/menu_route_icon"
+        android:background="#00000000"
+        android:layout_gravity="center"/>
+
+    <ImageButton
+        android:id="@+id/level_choose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:onClick="onClicked"
+        android:src="@drawable/menu_level_icon"
+        android:background="#00000000"
+        android:layout_gravity="center"/>
+
+    <ImageButton
+        android:id="@+id/coursebook_choose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:onClick="onClicked"
+        android:src="@drawable/menu_coursebook_icon"
+        android:background="#00000000"
+        android:layout_gravity="center"/>
+
+</LinearLayout>

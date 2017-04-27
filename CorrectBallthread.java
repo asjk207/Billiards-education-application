@@ -1,25 +1,22 @@
 package com.example.user.billardtrainningapplication;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
-import android.os.Handler;
-
-
 /**
- * Created by user on 2017-02-01.
+ * Created by user on 2017-03-02.
  */
 
-public class BallGothread extends Thread{
+public class CorrectBallthread extends Thread {
+
     Context context;
 
 
@@ -54,8 +51,6 @@ public class BallGothread extends Thread{
     private int YposX [];
     private int YposY [];
     int InitialPoint[];
-    //기본 정석에 대한 상대적 흰공 좌표
-    float bpsuguXY[] = new float [2];
 
 
     //상태 변수
@@ -74,6 +69,9 @@ public class BallGothread extends Thread{
     int tBoardheight;
     int tBallheight;
 
+    //CorretDialog screen 비율
+    double correctscreenratio=0.6;
+
     //파싱된 볼정보
     int casenum=11;
 
@@ -83,7 +81,7 @@ public class BallGothread extends Thread{
 
 
     //생성자
-    public BallGothread(Context context, SurfaceHolder sHolder){
+    public CorrectBallthread(Context context, SurfaceHolder sHolder){
         this.context = context;
         this.sHolder = sHolder;
         thisthread=this.currentThread();
@@ -102,24 +100,27 @@ public class BallGothread extends Thread{
         BFile.InputArray();
 
         //ScreenScaleResult 출력하는 화면에 맞추어 좌표 비율 맞춤
-        ScreenScaleResult SSR=new ScreenScaleResult(1000,tBoardheight);
-        SSR.CalcScreenRatio(1050,510);
+        ScreenScaleResult SSR=new ScreenScaleResult((int)(1150*correctscreenratio),(int)(2300*correctscreenratio));
+        SSR.CalcCorrectScreenRatio(1150,2300);
 
         InitialPoint=BFile.getInitialPointArrays();
 
-
         WposX=BFile.getListWBallXArrays();
         WposY=BFile.getListWBallYArrays();
+        for(int i=0;i<WposX.length;i++){
+            int tmp1,tmp2;
+            tmp1=SSR.getRatioPosX2(WposX[i]);
+            WposX[i]=tmp1;
+            tmp2=SSR.getRatioPosY2(WposY[i]);
+            WposY[i]=tmp2;
+        }
 
-        Rball=new CBall(InitialPoint[0],InitialPoint[1]);
+        Rball=new CBall(SSR.getRatioPosX2(InitialPoint[0]),SSR.getRatioPosY2(InitialPoint[1]));
         Log.e("**************", "RedX좌표 "+InitialPoint[0]+"RedY좌표 "+InitialPoint[1]);
-        Yball=new CBall(InitialPoint[2],InitialPoint[3]);
+        Yball=new CBall(SSR.getRatioPosX2(InitialPoint[2]),SSR.getRatioPosY2(InitialPoint[3]));
         Log.e("**************", "YellowX좌표 "+InitialPoint[2]+"YellowY좌표 "+InitialPoint[3]);
-        Wball=new CBall(InitialPoint[4],InitialPoint[5]);
+        Wball=new CBall(SSR.getRatioPosX2(InitialPoint[4]),SSR.getRatioPosY2(InitialPoint[5]));
         Log.e("**************", "WhiteX좌표 "+InitialPoint[4]+"WhiteY좌표 "+InitialPoint[5]);
-
-        search_bp_point();
-
 
 
         /*
@@ -183,34 +184,13 @@ public class BallGothread extends Thread{
         YellowBall = BitmapFactory.decodeResource(context.getResources(),R.drawable.yball2);
         WhiteBall = BitmapFactory.decodeResource(context.getResources(),R.drawable.wball2);
 
-        //비트맵 화면에 맞추어 리사이즈
-        Board=Bitmap.createScaledBitmap(Board,1150,2300,true);
+
+
+        Board=Bitmap.createScaledBitmap(Board,(int)(1150*correctscreenratio),(int)(2300*correctscreenratio),true);
         Log.e("************", "보드 높이"+tBoardheight);
-        RedBall=Bitmap.createScaledBitmap(RedBall,Constant.BALL_WIDTH,Constant.BALL_HEIGHT,true);
-        YellowBall=Bitmap.createScaledBitmap(YellowBall,Constant.BALL_WIDTH,Constant.BALL_HEIGHT,true);
-        WhiteBall=Bitmap.createScaledBitmap(WhiteBall,Constant.BALL_WIDTH,Constant.BALL_HEIGHT,true);
-    }
-    public void search_bp_point() {
-        switch (GlobalVariable.casekinds) {
-            case "ap_dwidol1":
-                bpsuguXY = Constant.dwidol1_1WXY;
-                break;
-            case "ap_dwidol2":
-                bpsuguXY = Constant.dwidol1_2WXY;
-                break;
-            case "ap_dwidol3":
-                bpsuguXY = Constant.dwidol1_3WXY;
-                break;
-            case "ap_dwidol4":
-                bpsuguXY = Constant.dwidol1_4WXY;
-                break;
-            case "ap_dwidol5":
-                bpsuguXY = Constant.dwidol2_1WXY;
-                break;
-            case "ap_dwidol6":
-                bpsuguXY = Constant.dwidol2_2WXY;
-                break;
-        }
+        RedBall=Bitmap.createScaledBitmap(RedBall,(int)(Constant.BALL_WIDTH*correctscreenratio),(int)(Constant.BALL_HEIGHT*correctscreenratio),true);
+        YellowBall=Bitmap.createScaledBitmap(YellowBall,(int)(Constant.BALL_WIDTH*correctscreenratio),(int)(Constant.BALL_HEIGHT*correctscreenratio),true);
+        WhiteBall=Bitmap.createScaledBitmap(WhiteBall,(int)(Constant.BALL_WIDTH*correctscreenratio),(int)(Constant.BALL_HEIGHT*correctscreenratio),true);
     }
 
     //화면의 폭과 높이를 전달 받는다
@@ -250,9 +230,9 @@ public class BallGothread extends Thread{
             //Log.e("좌표  ", " Yposx의값 : " + YposX[a] + "  YposY의 값 : " + YposY[a]+"a 의값 : "+a);
             //화면에 그리는 작업을 한다.
             try {
-                canvas.drawColor(Color.WHITE);
+                canvas.drawColor(Color.BLACK);
                 //동기화 블럭에서 작업을 해야한다.
-                canvas.drawBitmap(Board,-10 , -10, paint);
+                canvas.drawBitmap(Board,0 , 0, paint);
 
                 /*for (int n = 0; n < RposX.length - 1; n++) {
                     paint.setColor(Color.RED);
@@ -268,79 +248,51 @@ public class BallGothread extends Thread{
 
                 synchronized (sHolder) {//그리기 위한 모든 작업을 하는곳
                     //canvas객체를 이용해서 반복적인 그리기 작업을 한다.
-                    if (GlobalVariable.linevisible) {
-                        for (int n = 0; n < WposX.length - 1; n++) {
-                            paint.setColor(Color.WHITE);
-                            paint.setStrokeWidth(3f);
-                            canvas.drawLine(WposX[n], WposY[n], WposX[n + 1], WposY[n + 1], paint);
-                        }
-                    }
-                    if (!GlobalVariable.linevisible) {
+
+                    for (int n = 0; n < WposX.length-1 ; n++) {
                         paint.setColor(Color.WHITE);
-                        paint.setTextSize(40f);
-                        canvas.drawText("수구", Wball.getSx(), Wball.getSy() - 40, paint);
-                        canvas.drawBitmap(WhiteBall, Wball.getSx(), Wball.getSy() - 20, paint);
-                        paint.setColor(Color.YELLOW);
-                        paint.setTextSize(40f);
-                        canvas.drawText("제1적구", Yball.getSx() - 40, Yball.getSy() - 40, paint);
-                        if (GlobalVariable.casekinds.equals("ap_dwidol1")||GlobalVariable.casekinds.equals("ap_dwidol2")||GlobalVariable.casekinds.equals("ap_dwidol3")||GlobalVariable.casekinds.equals("ap_dwidol4")||GlobalVariable.casekinds.equals("ap_dwidol5")||GlobalVariable.casekinds.equals("ap_dwidol6")) {            //응용 모드일 경우 기본정석 좌표 에서의 움직인 포인트 표시
-                            paint.setColor(Color.YELLOW);
-                            paint.setTextSize(40f);
-                            canvas.drawText("기본 정석 포인트", bpsuguXY[0] - 110, bpsuguXY[1] - 40, paint);
-                            paint.setColor(Color.WHITE);
-                            canvas.drawCircle(bpsuguXY[0], bpsuguXY[1], 10, paint);
-                            paint.setStrokeWidth(5f);
-                            canvas.drawLine(bpsuguXY[0], bpsuguXY[1], InitialPoint[4], InitialPoint[5], paint);
-                            if (bpsuguXY[0] - InitialPoint[4] < 0) {
-                                canvas.drawLine(InitialPoint[4], InitialPoint[5], InitialPoint[4] - 20, InitialPoint[5] - 20, paint);
-                                canvas.drawLine(InitialPoint[4], InitialPoint[5], InitialPoint[4] - 20, InitialPoint[5] + 20, paint);
-                            } else if (bpsuguXY[0] - InitialPoint[4] > 0) {
-                                canvas.drawLine(InitialPoint[4], InitialPoint[5], InitialPoint[4] + 20, InitialPoint[5] - 20, paint);
-                                canvas.drawLine(InitialPoint[4], InitialPoint[5], InitialPoint[4] + 20, InitialPoint[5] + 20, paint);
-                            }
-                        }
-                        canvas.drawBitmap(RedBall, Rball.getSx() - 20, Rball.getSy() - 20, paint);
-                        canvas.drawBitmap(YellowBall, Yball.getSx() - 20, Yball.getSy() - 20, paint);
+                        paint.setStrokeWidth(2f);
+                        canvas.drawLine(WposX[n], WposY[n], WposX[n + 1], WposY[n + 1], paint);
+                    }
+                    canvas.drawBitmap(WhiteBall, Wball.getSx() - 20, Wball.getSy() - 20, paint);
+                    canvas.drawBitmap(RedBall, Rball.getSx() - 20, Rball.getSy() - 20, paint);
+                    canvas.drawBitmap(YellowBall, Yball.getSx() - 20, Yball.getSy() - 20, paint);
 
-                        if (GlobalVariable.BallGoDraw) {
-                            canvas.drawBitmap(WhiteBall, Wball.tx - 20, Wball.ty - 20, paint);
-                            Wball.LineGo(WposX[a], WposY[a]);
-                            cnt++;
-                            //Log.e("상태  ", " i의값 : " + i );
 
-                            if (cnt == 25) {
-                                Wball.stx = Wball.tx;
-                                Wball.sty = Wball.ty;
-                                if (a < (WposX.length - 1)) {
-                                    ++a;
-                                }
-                                //Rball.stx = Rball.tx;
-                                //Rball.sty = Rball.ty;
-                                //Yball.stx = Yball.tx;
-                                //Yball.sty = Yball.ty;
+                    //canvas.drawBitmap(WhiteBall,Wball.tx-20,Wball.ty-20,paint);
+                    //canvas.drawBitmap(RedBall,Rball.tx-20,Rball.ty-20,paint);
+                    //canvas.drawBitmap(YellowBall,Yball.tx-20,Yball.ty-20,paint);
+
+                    //Wball.LineGo(WposX[a], WposY[a]);
+                    //Log.e("좌표  ", " Wposx의값 : " + WposX[a] + "  WposY의 값 : " + WposY[a]+"a 의값 : "+a);
+                    //Rball.LineGo(RposX[b], RposY[b]);
+                    //Log.e("좌표  ", " Rposx의값 : " + RposX[b] + "  RposY의 값 : " + RposY[b]+"b 의값 : "+b);
+                    //Yball.LineGo(YposX[c], YposY[c]);
+                    //Log.e("좌표  ", " Wposx의값 : " + WposX[a] + "  WposY의 값 : " + WposY[a]);
+
+
+                    cnt++;
+                    //Log.e("상태  ", " i의값 : " + i );
+
+                    if (cnt == 3) {
+                        Wball.stx = Wball.tx;
+                        Wball.sty = Wball.ty;
+                        //Rball.stx = Rball.tx;
+                        //Rball.sty = Rball.ty;
+                        //Yball.stx = Yball.tx;
+                        //Yball.sty = Yball.ty;
                             /*if(b<=(RposX.length-1)){
                                 ++b;
                             }
-
+                            if(a<=(WposX.length-1)){
+                                ++a;
+                            }
                             if(c<=(YposX.length-1)){
                                 ++c;
                             }*/
-                                //Log.e("상태  ", " a의값 : " + a);
-                                cnt = 0;
-                            }
-                        }
-                        //canvas.drawBitmap(RedBall,Rball.tx-20,Rball.ty-20,paint);
-                        //canvas.drawBitmap(YellowBall,Yball.tx-20,Yball.ty-20,paint);
-
-
-                        //Log.e("좌표  ", " Wposx의값 : " + WposX[a] + "  WposY의 값 : " + WposY[a]+"a 의값 : "+a);
-                        //Rball.LineGo(RposX[b], RposY[b]);
-                        //Log.e("좌표  ", " Rposx의값 : " + RposX[b] + "  RposY의 값 : " + RposY[b]+"b 의값 : "+b);
-                        //Yball.LineGo(YposX[c], YposY[c]);
-                        //Log.e("좌표  ", " Wposx의값 : " + WposX[a] + "  WposY의 값 : " + WposY[a]);
-
-
-
+                        //Log.e("상태  ", " a의값 : " + a);
+                        cnt = 0;
+                    }
                         /*if (GlobalVariable.nextstate) {
                             isRun=false;
                             a=0;
@@ -350,8 +302,8 @@ public class BallGothread extends Thread{
                             GlobalVariable.nextstate=false;
                             isRun=true;
                         }*/
-                    }
                 }
+
 
             } finally {
                 if (canvas != null)//실제로 화면을 그리는 곳(while을 돌면서 화면을 덧그리기 때문에 invalidate가 필요하지않다.
@@ -362,6 +314,7 @@ public class BallGothread extends Thread{
             if (isWait) {//isWait의 초기값을 false 이다.
                 try {
                     synchronized (this) {
+                        isRun=false;
                         wait();//notify 할때까지 기다린다.
                     }
                 } catch (Exception e) {
@@ -369,10 +322,5 @@ public class BallGothread extends Thread{
             }
         }
     }
-
-
-
-
-
 
 }
