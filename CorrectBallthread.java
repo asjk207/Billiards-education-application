@@ -52,6 +52,14 @@ public class CorrectBallthread extends Thread {
     private int YposY [];
     int InitialPoint[];
 
+    float DBWposX [];
+    float DBWposY [];
+    float DBRposX [];
+    float DBRposY [];
+    float DBYposX [];
+    float DBYposY [];
+    float DBInitialPoint[];
+
 
     //상태 변수
     int cnt=0;
@@ -59,6 +67,11 @@ public class CorrectBallthread extends Thread {
     int c=0;
     int b=0;
     int n=0;
+
+    //좌표 맞추기 위한 변수
+    int Cox=50;
+    int Coy=20;
+
 
     //비트맵 정보
     Bitmap Board;
@@ -84,14 +97,8 @@ public class CorrectBallthread extends Thread {
     public CorrectBallthread(Context context, SurfaceHolder sHolder){
         this.context = context;
         this.sHolder = sHolder;
-        thisthread=this.currentThread();
 
         Bitmap_process();
-        File_process();
-
-
-
-
     }
     public void File_process(){
         //File 에서 받은 공 좌표정보 초기화
@@ -100,7 +107,7 @@ public class CorrectBallthread extends Thread {
         BFile.InputArray();
 
         //ScreenScaleResult 출력하는 화면에 맞추어 좌표 비율 맞춤
-        ScreenScaleResult SSR=new ScreenScaleResult((int)(1150*correctscreenratio),(int)(2300*correctscreenratio));
+        ScreenScaleResult SSR=new ScreenScaleResult(width,height);
         SSR.CalcCorrectScreenRatio(1150,2300);
 
         InitialPoint=BFile.getInitialPointArrays();
@@ -176,6 +183,79 @@ public class CorrectBallthread extends Thread {
         */
     }
 
+    public void DB_Process() {
+        //DB 에서 받은 공 좌표정보 초기화
+        DB_Adapter DBA = new DB_Adapter();
+
+        //DBA.getData("http://119.207.205.72/html/request.php","640");
+        DBA.JSONinputList();
+        DBA.InputArray();
+
+        //ScreenScaleResult 출력하는 화면에 맞추어 좌표 비율 맞춤
+        ScreenScaleResult SSR = new ScreenScaleResult(width, height);
+        Log.e("***********", "width" + width + " / height: " + height);
+
+//        DBInitialPoint=DBA.getInitialPoint();
+
+        DBWposX=DBA.getWposX();   //좌표 수직 변환으로 자리 바꿈
+        DBWposY=DBA.getWposY();
+        for (int i = 0; i < WposX.length; i++) {
+            float tmp1, tmp2;
+            tmp1 = SSR.getRatioPosX(WposX[i]);
+            DBWposX[i] = tmp1+Cox;
+            tmp2 = SSR.getRatioPosY(WposY[i]);
+            DBWposY[i] = tmp2+Coy;
+            Log.e("**************", "WposX좌표 " + WposX[i] + "WposY좌표 " + WposY[i]);
+        }
+        DBRposX = DBA.getRposX();
+        DBRposY = DBA.getRposY();
+        for (int i = 0; i < RposX.length; i++) {
+            float tmp3, tmp4;
+            tmp3 = SSR.getRatioPosX(RposX[i]);
+            DBRposX[i] = tmp3+Cox;
+            tmp4 = SSR.getRatioPosY(RposY[i]);
+            DBRposY[i] = tmp4+Coy;
+            Log.e("**************", "RposX좌표 "+RposX[i]+"RposY좌표 "+RposY[i]);
+        }
+        DBYposX = DBA.getYposX();
+        DBYposY = DBA.getYposY();
+        for (int i = 0; i < YposX.length; i++) {
+            float tmp5, tmp6;
+            tmp5 = SSR.getRatioPosX(YposX[i]);
+            DBYposX[i] = tmp5+Cox;
+            tmp6 = SSR.getRatioPosY(YposY[i]);
+            DBYposY[i] = tmp6+Coy;
+            Log.e("**************", "YposX좌표 "+YposX[i]+"YposY좌표 "+YposY[i]);
+        }
+        Rball=new CBall(SSR.getRatioPosX(DBInitialPoint[1])+Cox,SSR.getRatioPosY(DBInitialPoint[0])+Coy);
+        Log.e("**************", "RedX좌표 "+SSR.getRatioPosX(520-InitialPoint[1])+"RedY좌표 "+SSR.getRatioPosY(InitialPoint[0]));
+        Yball=new CBall(SSR.getRatioPosX(DBInitialPoint[3])+Cox,SSR.getRatioPosY(DBInitialPoint[2])+Coy);
+        Log.e("**************", "YellowX좌표 "+SSR.getRatioPosX(520-InitialPoint[3])+"YellowY좌표 "+SSR.getRatioPosY(InitialPoint[2]));
+        Wball=new CBall(SSR.getRatioPosX(DBInitialPoint[5])+Cox,SSR.getRatioPosY(DBInitialPoint[4])+Coy);
+        Log.e("**************", "WhiteX좌표 "+SSR.getRatioPosX(520-InitialPoint[5])+"WhiteY좌표 "+SSR.getRatioPosY(InitialPoint[4]+30));
+
+    }
+    //화면의 폭과 높이를 전달 받는다
+    public void setScreenSizeNFP(int width, int height){
+        this.width = width;
+        this.height = height;
+        //비트맵 화면에 맞추어 리사이즈
+        Board=Bitmap.createScaledBitmap(Board,width+30/2,height+30/2,true);
+        //Log.e("***********", "width"+width+" / height: "+ height);
+        File_process();
+
+    }
+    //화면의 폭과 높이를 전달 받는다
+    public void setScreenSizeNDBP(int width, int height){
+        this.width = width;
+        this.height = height;
+        //비트맵 화면에 맞추어 리사이즈
+        Board=Bitmap.createScaledBitmap(Board,width+30,height+30,true);
+        //Log.e("***********", "width"+width+" / height: "+ height);
+        DB_Process();
+
+    }
+
 
     public void Bitmap_process(){
         //Board 비트맵 정보 초기화(사이즈 맞춤)
@@ -186,7 +266,7 @@ public class CorrectBallthread extends Thread {
 
 
 
-        Board=Bitmap.createScaledBitmap(Board,(int)(1150*correctscreenratio),(int)(2300*correctscreenratio),true);
+        //Board=Bitmap.createScaledBitmap(Board,(int)(1150*correctscreenratio),(int)(2300*correctscreenratio),true);
         Log.e("************", "보드 높이"+tBoardheight);
         RedBall=Bitmap.createScaledBitmap(RedBall,(int)(Constant.BALL_WIDTH*correctscreenratio),(int)(Constant.BALL_HEIGHT*correctscreenratio),true);
         YellowBall=Bitmap.createScaledBitmap(YellowBall,(int)(Constant.BALL_WIDTH*correctscreenratio),(int)(Constant.BALL_HEIGHT*correctscreenratio),true);

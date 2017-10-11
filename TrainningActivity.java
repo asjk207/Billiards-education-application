@@ -4,28 +4,43 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.os.PersistableBundle;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.Random;
 
 
 /**
  * Created by user on 2017-01-23.
  */
 
-public class TrainningActivity extends AppCompatActivity {
+public class TrainningActivity extends AppCompatActivity implements GestureDetector.OnGestureListener{
     public static final int REQUEST_CODE_THICK = 1001;
     public static final int REQUEST_CODE_POINTNTIP = 1002;
     public static final int REQUEST_CODE_STROKE = 1003;
     public static final int REQUEST_CODE_MENU = 1004;
     public static final int REQUEST_CODE_NEXT = 1005;
+
+
+
 
     GlobalVariable globalVariable;
 
@@ -59,16 +74,48 @@ public class TrainningActivity extends AppCompatActivity {
     int Wrong_count;
     int Wrong_swtich;
     //오답수 카운트 변수
+    int Log_wrong_count=0;
+    int Log_right_count=0;
 
-    public Handler mHandler;
     FileINOUT AFile;
 
     ImageButton Play_Button;
+
+    // 변경된 해상도 측정 변수
+    int cv_width;
+    int cv_height;
+
+    //제스쳐 터치 이벤트 감지 변수
+    private GestureDetectorCompat gestureDetector;
+    float X_down;
+    float X_up;
+    float Y_down;
+    float Y_up;
+    boolean isSwiped=false;
+
+    //숨겨진 유아이 창 변수수
+   RelativeLayout variable_uiselect;
+
+//    //데이터 베이스 접근 클래스
+//    DB_Adapter DBA;
+//    int caseid=2; // 문제 번호
+//
+    //DatabaseReference myRef;
+   // DatabaseReference myRef2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         Log.e("OnCreate Call","온크리에이트가 호출되었습니다.");
         super.onCreate(savedInstanceState);
+        //Firebase database 연결 함수
+//        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        myRef = database.getReference("Wrongcnt");
+//        myRef2 = database.getReference("Rightcnt");
+
+//        DBA=new DB_Adapter();
+//        caseid = rand.nextInt(700);
+//        if(GlobalVariable.Global_Difficulty=="R") DB_Process(caseid);
 
         globalVariable=(GlobalVariable)getApplication();
         MainItent = getIntent();
@@ -76,8 +123,22 @@ public class TrainningActivity extends AppCompatActivity {
         RouteLevel=MainItent.getStringExtra("RouteLevel");
         GlobalVariable.casekinds=RouteLevel;
 
+
+        // 기기의 해상도 측정
+        DisplayMetrics metrics= new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
         setContentView(R.layout.trainning_activity);
+
         trainnigView=(TrainnigView) findViewById(R.id.TrainningView);
+        trainnigView.setScreenSize((int)metrics.widthPixels,(int)metrics.heightPixels);
+
+
+
+//        Log.e("Globalvariable",""+GlobalVariable.Global_Difficulty);
+
+
+        //variable_uiselect.wait(100);
 
         Stroke_text = (TextView)findViewById(R.id.stroke_text);
 
@@ -89,14 +150,15 @@ public class TrainningActivity extends AppCompatActivity {
                 return imageView;
             }
         });
-        Correct_imageSwitcher = (ImageSwitcher) findViewById(R.id.right_wrong_imageswitcher);
-        Correct_imageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
+        //Correct_imageSwitcher = (ImageSwitcher) findViewById(R.id.right_wrong_imageswitcher);
+        /*Correct_imageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
             @Override
             public View makeView() {
                 ImageView imageView = new ImageView(getApplicationContext());
                 return imageView;
             }
         });
+        */
 
         Play_Button = (ImageButton)findViewById(R.id.play_animation);
 
@@ -120,28 +182,30 @@ public class TrainningActivity extends AppCompatActivity {
         GlobalVariable.linevisible=false;
         GlobalVariable.BallGoDraw=false;
 
-        AFile = new FileINOUT(trainnigView.context);
-        AFile.Casefileread(trainnigView.context, RouteLevel);
-        Log.e("****************",""+RouteLevel);
+        if(!(GlobalVariable.Global_Difficulty=="R")) {
+            AFile = new FileINOUT(trainnigView.context);
+            AFile.Casefileread(trainnigView.context, RouteLevel);
+            Log.e("****************", "" + RouteLevel);
 
-        switch (AFile.sugu){
-            case " white":
-                GlobalVariable.whiteball=1;
-                break;
-            case " yellow":
-                GlobalVariable.yellowball=1;
-                break;
-        }
-        switch (AFile.onejukgu){
-            case " white":
-                GlobalVariable.whiteball = 2;
-                break;
-            case " yellow":
-                GlobalVariable.yellowball=2;
-                break;
-            case " red":
-                GlobalVariable.redball=2;
-                break;
+            switch (AFile.sugu) {
+                case " white":
+                    GlobalVariable.whiteball = 1;
+                    break;
+                case " yellow":
+                    GlobalVariable.yellowball = 1;
+                    break;
+            }
+            switch (AFile.onejukgu) {
+                case " white":
+                    GlobalVariable.whiteball = 2;
+                    break;
+                case " yellow":
+                    GlobalVariable.yellowball = 2;
+                    break;
+                case " red":
+                    GlobalVariable.redball = 2;
+                    break;
+            }
         }
 
         if(GlobalVariable.whiteball==1 && GlobalVariable.redball==2) {
@@ -152,9 +216,135 @@ public class TrainningActivity extends AppCompatActivity {
             imageSwitcher.setImageResource(GlobalVariable.yOneValueArray[14]);
             imageSwitcher.invalidate();
         }
-        Correct_imageSwitcher.setImageResource(Correct_Switcher_Array[0]);
-        Correct_imageSwitcher.invalidate();
+//        Correct_imageSwitcher.setImageResource(Correct_Switcher_Array[0]);
+//        Correct_imageSwitcher.invalidate();
 
+
+        // 제스쳐 감지 선언
+        gestureDetector = new GestureDetectorCompat(getApplicationContext(),this);
+
+        //숨겨진 유아이
+        variable_uiselect=(RelativeLayout) findViewById(R.id.UIselect);
+
+        /*
+
+        Log.i("TAG", "display width : " + metrics.widthPixels + ", height : " + metrics.heightPixels + ", densityDpi : " + metrics.densityDpi);
+        // 변경된 해상도로 넓이, 높이 계산
+        cv_width=(int)(metrics.widthPixels*0.8);
+        cv_height=(int)(metrics.heightPixels*0.9);
+        Log.e("TAG", "cv_width : " + cv_width + ", cv_height : " + cv_height );
+
+        RelativeLayout.LayoutParams params1 = new RelativeLayout.LayoutParams(cv_width,cv_height);
+        trainnigView.setLayoutParams(params1);
+        */
+        final ImageButton Menu_Button = (ImageButton)findViewById(R.id.menu);
+        Menu_Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    Menu_Button.setImageResource(R.drawable.menu_pressed);
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
+                    Menu_Button.setImageResource(R.drawable.menu);
+                }
+                return false;
+            }
+        });
+        final ImageButton Thick_Button = (ImageButton)findViewById(R.id.thick);
+        Thick_Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    Thick_Button.setImageResource(R.drawable.thick_icon_s_pressed);
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
+                    Thick_Button.setImageResource(R.drawable.thick_icon_s);
+                }
+                return false;
+            }
+        });
+        final ImageButton PointnTip_Button = (ImageButton)findViewById(R.id.pointntip);
+        PointnTip_Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    PointnTip_Button.setImageResource(R.drawable.pointntip_icon_s_pressed);
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
+                    PointnTip_Button.setImageResource(R.drawable.pointntip_icon_s);
+                }
+                return false;
+            }
+        });
+        final ImageButton Stroke_Button = (ImageButton)findViewById(R.id.stroke);
+        Stroke_Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    Stroke_Button.setImageResource(R.drawable.strock_icon_s_pressed);
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
+                    Stroke_Button.setImageResource(R.drawable.strock_icon_s);
+                }
+                return false;
+            }
+        });
+        final ImageButton Play_Button = (ImageButton)findViewById(R.id.play_animation);
+        Play_Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    Play_Button.setImageResource(R.drawable.button_play_pressed);
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
+                    Play_Button.setImageResource(R.drawable.button_play);
+                }
+                return false;
+            }
+        });
+        final ImageButton Youtube_Button = (ImageButton)findViewById(R.id.pro_button);
+        Youtube_Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    Youtube_Button.setImageResource(R.drawable.youtube_button_pressed);
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
+                    Youtube_Button.setImageResource(R.drawable.youtube_button);
+                }
+                return false;
+            }
+        });
+        final ImageButton Correct_Button = (ImageButton)findViewById(R.id.right_wrong);
+        Correct_Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    Correct_Button.setImageResource(R.drawable.correct_icon_pressed);
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
+                    Correct_Button.setImageResource(R.drawable.correct_icon);
+                }
+                return false;
+            }
+        });
+        final ImageButton Next_Button = (ImageButton)findViewById(R.id.next);
+        Next_Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    Next_Button.setImageResource(R.drawable.next_icon_pressed);
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
+                    Next_Button.setImageResource(R.drawable.next_icon);
+                }
+                return false;
+            }
+        });
+        final ImageButton Prev_Button = (ImageButton)findViewById(R.id.back);
+        Prev_Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    Prev_Button.setImageResource(R.drawable.back_icon_pressed);
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
+                    Prev_Button.setImageResource(R.drawable.back_icon);
+                }
+                return false;
+            }
+        });
 
     }
 
@@ -166,6 +356,8 @@ public class TrainningActivity extends AppCompatActivity {
                 startActivityForResult(menu_intent,REQUEST_CODE_MENU);
                 break;
             case R.id.thick:
+//                trainnigView.ballGothread.Bloop=true;
+//                GlobalVariable.BallGoDraw = true;
                 Intent thick_intent = new Intent(getApplicationContext(), Thick_dialog.class);
                 startActivityForResult(thick_intent,REQUEST_CODE_THICK);
                 break;
@@ -193,8 +385,8 @@ public class TrainningActivity extends AppCompatActivity {
                 GlobalVariable.SetThick=null;
                 GlobalVariable.SetStrock=null;
                 Stroke_text.setText("스트로크");
-                Correct_imageSwitcher.setImageResource(Correct_Switcher_Array[0]);
-                Correct_imageSwitcher.invalidate();
+               // Correct_imageSwitcher.setImageResource(Correct_Switcher_Array[0]);
+               // Correct_imageSwitcher.invalidate();
                 GlobalVariable.SetTip=null;
                 GlobalVariable.whiteball=0;
                 GlobalVariable.yellowball=0;
@@ -208,42 +400,53 @@ public class TrainningActivity extends AppCompatActivity {
                 Wrong_swtich=2;
                 AFile = null;
                 AFile = new FileINOUT(trainnigView.context);
-                if(GlobalVariable.casenum<case_count()){
-                    GlobalVariable.casenum++;
-                    AFile.Casefileread(trainnigView.context, RouteLevel);
-                    trainnigView.ballGothread.isWait=true;
-                    trainnigView.restartThread();
-                    trainnigView.ballGothread.isWait=false;
-                    switch (AFile.sugu){
-                        case " white":
-                            GlobalVariable.whiteball=1;
-                            break;
-                        case " yellow":
-                            GlobalVariable.yellowball=1;
-                            break;
-                    }
-                    switch (AFile.onejukgu){
-                        case " white":
-                            GlobalVariable.whiteball = 2;
-                            break;
-                        case " yellow":
-                            GlobalVariable.yellowball=2;
-                            break;
-                        case " red":
-                            GlobalVariable.redball=2;
-                            break;
-                    }
-                    if(GlobalVariable.whiteball==1 && GlobalVariable.redball==2) {
-                        imageSwitcher.setImageResource(GlobalVariable.OneValueArray[30]);
-                        imageSwitcher.invalidate();
-                    }
-                    else if(GlobalVariable.whiteball==1 && GlobalVariable.yellowball==2){
-                        imageSwitcher.setImageResource(GlobalVariable.yOneValueArray[14]);
-                        imageSwitcher.invalidate();
-                    }
 
+                if(!(GlobalVariable.Global_Difficulty=="R")) {
+                    if (GlobalVariable.casenum < case_count()) {
+                        GlobalVariable.casenum++;
+                        AFile.Casefileread(trainnigView.context, RouteLevel);
+                        trainnigView.ballGothread.isWait = true;
+                        trainnigView.restartThread();
+                        trainnigView.ballGothread.isWait = false;
+                        switch (AFile.sugu) {
+                            case " white":
+                                GlobalVariable.whiteball = 1;
+                                break;
+                            case " yellow":
+                                GlobalVariable.yellowball = 1;
+                                break;
+                        }
+                        switch (AFile.onejukgu) {
+                            case " white":
+                                GlobalVariable.whiteball = 2;
+                                break;
+                            case " yellow":
+                                GlobalVariable.yellowball = 2;
+                                break;
+                            case " red":
+                                GlobalVariable.redball = 2;
+                                break;
+                        }
+
+                        if (GlobalVariable.whiteball == 1 && GlobalVariable.redball == 2) {
+                            imageSwitcher.setImageResource(GlobalVariable.OneValueArray[30]);
+                            imageSwitcher.invalidate();
+                        } else if (GlobalVariable.whiteball == 1 && GlobalVariable.yellowball == 2) {
+                            imageSwitcher.setImageResource(GlobalVariable.yOneValueArray[14]);
+                            imageSwitcher.invalidate();
+                        }
+                    }
                 }
-                else if(GlobalVariable.casenum>=case_count()) Toast.makeText(getApplicationContext(), "다음 문제는 없습니다.", Toast.LENGTH_SHORT).show();
+                else if (GlobalVariable.casenum >= case_count())
+                    Toast.makeText(getApplicationContext(), "다음 문제는 없습니다.", Toast.LENGTH_SHORT).show();
+
+                if(GlobalVariable.Global_Difficulty=="R"){
+                        Log.e("next","test next");
+                        if(GlobalVariable.DBcasenum<7) GlobalVariable.DBcasenum++;
+                        trainnigView.ballGothread.isWait = true;
+                        trainnigView.restartThread();
+                        trainnigView.ballGothread.isWait = false;
+                }
                 break;
             case R.id.back:
                 Play_Button.setVisibility(View.INVISIBLE);
@@ -254,8 +457,8 @@ public class TrainningActivity extends AppCompatActivity {
                 GlobalVariable.SetThick=null;
                 GlobalVariable.SetStrock=null;
                 Stroke_text.setText("스트로크");
-                Correct_imageSwitcher.setImageResource(Correct_Switcher_Array[0]);
-                Correct_imageSwitcher.invalidate();
+               // Correct_imageSwitcher.setImageResource(Correct_Switcher_Array[0]);
+               // Correct_imageSwitcher.invalidate();
                 GlobalVariable.SetTip=null;
                 GlobalVariable.whiteball=0;
                 GlobalVariable.yellowball=0;
@@ -303,38 +506,80 @@ public class TrainningActivity extends AppCompatActivity {
                         imageSwitcher.invalidate();
                     }
                 }
+                if(GlobalVariable.Global_Difficulty=="R"){
+                    if(GlobalVariable.DBcasenum>1) GlobalVariable.DBcasenum--;
+                    trainnigView.ballGothread.isWait = true;
+                    trainnigView.restartThread();
+                    trainnigView.ballGothread.isWait = false;
+                }
                 else if(GlobalVariable.casenum<=1)Toast.makeText(getApplicationContext(), "이전 문제는 없습니다", Toast.LENGTH_SHORT).show(); //Toast.makeText(getApplicationContext(), "이전 문제는 없습니다."+GlobalVariable.casenum, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.right_wrong:
-                if(Wrong_count>=3 || Wrong_swtich==1) {
+                if(!(GlobalVariable.Global_Difficulty=="R")) {
+                    if (Wrong_count >= 3 || Wrong_swtich == 1) {
 //                    trainnigView.ballGothread.isWait=true;
 //                    trainnigView.ballGothread=null;
-                    Intent correct_intent = new Intent(getApplicationContext(), Correct_dialog.class);
-                    startActivity(correct_intent);
+                        Intent correct_intent = new Intent(getApplicationContext(), Correct_dialog.class);
+                        startActivity(correct_intent);
+                    }
+                    if (v_thick != null && v_tip != null && v_point != null && v_stroke != null && Wrong_swtich == 2) {
+                        printcorrect();
+                    } else if (v_thick == null || v_tip == null || v_point == null || v_stroke == null) {
+                        Intent small_intent = new Intent(getApplicationContext(), Small_dialog.class);
+                        small_intent.putExtra("Message", "shortage");
+                        startActivity(small_intent);
+                    }
                 }
-                if(v_thick != null && v_tip != null && v_point != null && v_stroke != null && Wrong_swtich == 2){
-                    printcorrect();
-                }
-                else if(v_thick == null || v_tip == null || v_point == null || v_stroke == null){
-                    Intent small_intent = new Intent(getApplicationContext(), Small_dialog.class);
-                    small_intent.putExtra("Message","shortage");
-                    startActivity(small_intent);
+                if(GlobalVariable.Global_Difficulty=="R") {
+                    trainnigView.restartThread();
+                    trainnigView.ballGothread.Bloop=true;
+                    GlobalVariable.BallGoDraw = true;
+                    Toast.makeText(getApplicationContext(), "공 움직여요~: "+GlobalVariable.BallGoDraw, Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
+
+
     }
 
     public void onClickyoutube(View view) {
         switch (view.getId()) {
             case R.id.pro_button:
-                GlobalVariable.CourseBook_Youtube_Switcher = 0;
-                trainnigView.ballGothread.isWait=true;
-                trainnigView.ballGothread=null;
-                Intent YouTubeIntent = new Intent(getApplicationContext(), YouTubeActivity.class);
-                startActivity(YouTubeIntent);
+                    GlobalVariable.CourseBook_Youtube_Switcher = 0;
+                    trainnigView.ballGothread.isWait = true;
+                    trainnigView.ballGothread = null;
+                    Intent YouTubeIntent = new Intent(getApplicationContext(), YouTubeActivity.class);
+                    YouTubeIntent.addFlags(YouTubeIntent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(YouTubeIntent);
                 break;
-        }
+                }
     }
+
+//    @Override
+//    protected void onStop() {
+//        trainnigView.ballGothread.isWait=true;
+//        trainnigView.ballGothread=null;
+//        super.onStop();
+//    }
+//
+//    @Override
+//    protected void onResume() {
+//        trainnigView.ballGothread.isWait=false;
+//        super.onResume();
+//    }
+//
+//    @Override
+//    protected void onPostResume() {
+//        trainnigView.ballGothread.isWait=false;
+//        super.onPostResume();
+//    }
+//
+//    @Override
+//    protected void onDestroy() {
+//        trainnigView.ballGothread.isWait=true;
+//        trainnigView.ballGothread=null;
+//        super.onDestroy();
+//    }
 
     @Override
     public void onBackPressed() {
@@ -343,8 +588,12 @@ public class TrainningActivity extends AppCompatActivity {
         GlobalVariable.linevisible=false;
         GlobalVariable.casenum=1;
         GlobalVariable.BallGoDraw=false;
-        MainItent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        MainItent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //MainItent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        //MainItent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Log.e("","Log_wrong_cnt"+Log_wrong_count);
+        Log.e("","Log_right_cnt"+Log_right_count);
+//        myRef.setValue(Log_wrong_count);
+//        myRef2.setValue(Log_right_count);
 
         super.onBackPressed();
 
@@ -407,10 +656,43 @@ public class TrainningActivity extends AppCompatActivity {
                 small2_intent.putExtra("Message","correct");
                 startActivity(small2_intent);
                 Wrong_swtich=1;
-                Correct_imageSwitcher.setImageResource(Correct_Switcher_Array[1]);
-                Correct_imageSwitcher.invalidate();
+//                Correct_imageSwitcher.setImageResource(Correct_Switcher_Array[1]);
+//                Correct_imageSwitcher.invalidate();
                 Play_Button.setVisibility(View.VISIBLE);
                 Play_Button.setEnabled(true);
+                //Log_right_count++;
+                Log.e("","Log_right_count"+Log_right_count);
+                if (RouteLevel.equals("ap_dwidol1") || RouteLevel.equals("ap_dwidol2") || RouteLevel.equals("ap_dwidol3")
+                        || RouteLevel.equals("ap_dwidol4") || RouteLevel.equals("ap_dwidol5") || RouteLevel.equals("ap_dwidol6")){
+                    GlobalVariable.backspin_right_cnt++;
+                    GlobalVariable.right_cnt++;
+                }
+                else if (RouteLevel.equals("ap_apdol1") || RouteLevel.equals("ap_apdol2") || RouteLevel.equals("ap_apdol3")
+                        || RouteLevel.equals("ap_apdol6") || RouteLevel.equals("ap_apdol5") || RouteLevel.equals("ap_apdol4") ||
+                        RouteLevel.equals("ap_apdol7") || RouteLevel.equals("ap_apdol8")){
+                    GlobalVariable.frontspin_right_cnt++;
+                    GlobalVariable.right_cnt++;
+                }
+                else if (RouteLevel.equals("ap_bitgyou1") || RouteLevel.equals("ap_bitgyou2") || RouteLevel.equals("ap_bitgyou3")){
+                    GlobalVariable.bitgyou_right_cnt++;
+                    GlobalVariable.right_cnt++;
+                }
+                else if (RouteLevel.equals("ap_doublecushion1") || RouteLevel.equals("ap_doublecushion2") || RouteLevel.equals("ap_doublecushion3")
+                            || RouteLevel.equals("ap_doublecushion4") || RouteLevel.equals("ap_doublecushion5")){
+                    GlobalVariable.traverse_right_cnt++;
+                    GlobalVariable.right_cnt++;
+                }
+                else if (RouteLevel.equals("ap_ggeoga1") || RouteLevel.equals("ap_ggeoga2") || RouteLevel.equals("ap_ggeoga3")
+                        || RouteLevel.equals("ap_ggeoga4") || RouteLevel.equals("ap_ggeoga5")){
+                    GlobalVariable.ggeoga_right_cnt++;
+                    GlobalVariable.right_cnt++;
+                }
+                else if (RouteLevel.equals("ap_youpdol1") || RouteLevel.equals("ap_youpdol2") || RouteLevel.equals("ap_youpdol3")
+                        || RouteLevel.equals("ap_youpdol4") || RouteLevel.equals("ap_youpdol5") || RouteLevel.equals("ap_youpdol6") ||
+                        RouteLevel.equals("ap_youpdol7") || RouteLevel.equals("ap_youpdol8") || RouteLevel.equals("ap_youpdol9")){
+                    GlobalVariable.sidespin_right_cnt++;
+                    GlobalVariable.right_cnt++;
+                }
             }
         }
         if (vthick != null && vtip != null && vpoint != null){
@@ -428,8 +710,8 @@ public class TrainningActivity extends AppCompatActivity {
     public void printcorrect(){
             Wrong_count=Wrong_count+1;
             if(Wrong_count>=3){
-                Correct_imageSwitcher.setImageResource(Correct_Switcher_Array[1]);
-                Correct_imageSwitcher.invalidate();
+ //               Correct_imageSwitcher.setImageResource(Correct_Switcher_Array[1]);
+//                Correct_imageSwitcher.invalidate();
                 Wrong_swtich=1;
 
             }
@@ -439,6 +721,50 @@ public class TrainningActivity extends AppCompatActivity {
         Intent small2_intent = new Intent(getApplicationContext(), Small_dialog.class);
         small2_intent.putExtra("Message","not");
         startActivity(small2_intent);
+        Log_wrong_count++;
+        Log.e("","wrong_cnt"+Log_wrong_count);
+        if (RouteLevel.equals("ap_dwidol1") || RouteLevel.equals("ap_dwidol2") || RouteLevel.equals("ap_dwidol3")
+                || RouteLevel.equals("ap_dwidol4") || RouteLevel.equals("ap_dwidol5") || RouteLevel.equals("ap_dwidol6")){
+            GlobalVariable.backspin_wrong_cnt++;
+            GlobalVariable.wrong_cnt++;
+            Log_wrong_count++;
+            Log.e("","wrong_cnt"+Log_wrong_count);
+        }
+        else if (RouteLevel.equals("ap_apdol1") || RouteLevel.equals("ap_apdol2") || RouteLevel.equals("ap_apdol3")
+                || RouteLevel.equals("ap_apdol6") || RouteLevel.equals("ap_apdol5") || RouteLevel.equals("ap_apdol4") ||
+                RouteLevel.equals("ap_apdol7") || RouteLevel.equals("ap_apdol8")){
+            GlobalVariable.frontspin_wrong_cnt++;
+            GlobalVariable.wrong_cnt++;
+            Log_wrong_count++;
+            Log.e("","wrong_cnt"+Log_wrong_count);
+        }
+        else if (RouteLevel.equals("ap_bitgyou1") || RouteLevel.equals("ap_bitgyou2") || RouteLevel.equals("ap_bitgyou3")){
+            GlobalVariable.bitgyou_wrong_cnt++;
+            GlobalVariable.wrong_cnt++;
+            Log_wrong_count++;
+            Log.e("","wrong_cnt"+Log_wrong_count);
+        }
+        else if (RouteLevel.equals("ap_doublecushion1") || RouteLevel.equals("ap_doublecushion2") || RouteLevel.equals("ap_doublecushion3")
+                || RouteLevel.equals("ap_doublecushion4") || RouteLevel.equals("ap_doublecushion5")){
+            GlobalVariable.traverse_wrong_cnt++;
+            GlobalVariable.wrong_cnt++;
+            Log_wrong_count++;
+            Log.e("","wrong_cnt"+Log_wrong_count);
+        }
+        else if (RouteLevel.equals("ap_ggeoga1") || RouteLevel.equals("ap_ggeoga2") || RouteLevel.equals("ap_ggeoga3")
+                || RouteLevel.equals("ap_ggeoga4") || RouteLevel.equals("ap_ggeoga5")){
+            GlobalVariable.ggeoga_wrong_cnt++;
+            GlobalVariable.wrong_cnt++;
+            Log_wrong_count++;
+            Log.e("","wrong_cnt"+Log_wrong_count);
+        }
+        else if (RouteLevel.equals("ap_youpdol1") || RouteLevel.equals("ap_youpdol2") || RouteLevel.equals("ap_youpdol3")
+                || RouteLevel.equals("ap_youpdol4") || RouteLevel.equals("ap_youpdol5") || RouteLevel.equals("ap_youpdol6") ||
+                RouteLevel.equals("ap_youpdol7") || RouteLevel.equals("ap_youpdol8") || RouteLevel.equals("ap_youpdol9")){
+            GlobalVariable.sidespin_wrong_cnt++;
+            GlobalVariable.wrong_cnt++;
+            Log.e("","wrong_cnt"+GlobalVariable.wrong_cnt);
+        }
     }
 
     public void Variable_change(){
@@ -7928,42 +8254,42 @@ public class TrainningActivity extends AppCompatActivity {
                 break;
 
             case "A":
-            if (RouteLevel.equals("ap_dwidol1")) return 3;
-            else if (RouteLevel.equals("ap_dwidol2")) return 3;
-            else if (RouteLevel.equals("ap_dwidol3")) return 2;
-            else if (RouteLevel.equals("ap_dwidol4")) return 3;
-            else if (RouteLevel.equals("ap_dwidol5")) return 4;
-            else if (RouteLevel.equals("ap_dwidol6")) return 2;
-            else if (RouteLevel.equals("ap_apdol1")) return 3;
-            else if (RouteLevel.equals("ap_apdol2")) return 2;
-            else if (RouteLevel.equals("ap_apdol3")) return 3;
-            else if (RouteLevel.equals("ap_apdol4")) return 3;
-            else if (RouteLevel.equals("ap_apdol5")) return 2;
-            else if (RouteLevel.equals("ap_apdol6")) return 2;
-            else if (RouteLevel.equals("ap_apdol7")) return 2;
-            else if (RouteLevel.equals("ap_apdol8")) return 2;
-            else if (RouteLevel.equals("ap_bitgyou1")) return 4;
-            else if (RouteLevel.equals("ap_bitgyou2")) return 3;
-            else if (RouteLevel.equals("ap_bitgyou3")) return 2;
-            else if (RouteLevel.equals("ap_doublecushion1")) return 2;
-            else if (RouteLevel.equals("ap_doublecushion2")) return 3;
-            else if (RouteLevel.equals("ap_doublecushion3")) return 3;
-            else if (RouteLevel.equals("ap_doublecushion4")) return 2;
-            else if (RouteLevel.equals("ap_doublecushion5")) return 2;
-            else if (RouteLevel.equals("ap_ggeoga1")) return 4;
-            else if (RouteLevel.equals("ap_ggeoga2")) return 3;
-            else if (RouteLevel.equals("ap_ggeoga3")) return 3;
-            else if (RouteLevel.equals("ap_ggeoga4")) return 3;
-            else if (RouteLevel.equals("ap_ggeoga5")) return 2;
-            else if (RouteLevel.equals("ap_youpdol1")) return 2;
-            else if (RouteLevel.equals("ap_youpdol2")) return 3;
-            else if (RouteLevel.equals("ap_youpdol3")) return 3;
-            else if (RouteLevel.equals("ap_youpdol4")) return 3;
-            else if (RouteLevel.equals("ap_youpdol5")) return 4;
-            else if (RouteLevel.equals("ap_youpdol6")) return 4;
-            else if (RouteLevel.equals("ap_youpdol7")) return 2;
-            else if (RouteLevel.equals("ap_youpdol8")) return 4;
-            else if (RouteLevel.equals("ap_youpdol9")) return 4;
+                if (RouteLevel.equals("ap_dwidol1")) return 3;
+                else if (RouteLevel.equals("ap_dwidol2")) return 3;
+                else if (RouteLevel.equals("ap_dwidol3")) return 2;
+                else if (RouteLevel.equals("ap_dwidol4")) return 3;
+                else if (RouteLevel.equals("ap_dwidol5")) return 4;
+                else if (RouteLevel.equals("ap_dwidol6")) return 2;
+                else if (RouteLevel.equals("ap_apdol1")) return 3;
+                else if (RouteLevel.equals("ap_apdol2")) return 2;
+                else if (RouteLevel.equals("ap_apdol3")) return 3;
+                else if (RouteLevel.equals("ap_apdol4")) return 3;
+                else if (RouteLevel.equals("ap_apdol5")) return 2;
+                else if (RouteLevel.equals("ap_apdol6")) return 2;
+                else if (RouteLevel.equals("ap_apdol7")) return 2;
+                else if (RouteLevel.equals("ap_apdol8")) return 2;
+                else if (RouteLevel.equals("ap_bitgyou1")) return 4;
+                else if (RouteLevel.equals("ap_bitgyou2")) return 3;
+                else if (RouteLevel.equals("ap_bitgyou3")) return 2;
+                else if (RouteLevel.equals("ap_doublecushion1")) return 2;
+                else if (RouteLevel.equals("ap_doublecushion2")) return 3;
+                else if (RouteLevel.equals("ap_doublecushion3")) return 3;
+                else if (RouteLevel.equals("ap_doublecushion4")) return 2;
+                else if (RouteLevel.equals("ap_doublecushion5")) return 2;
+                else if (RouteLevel.equals("ap_ggeoga1")) return 4;
+                else if (RouteLevel.equals("ap_ggeoga2")) return 3;
+                else if (RouteLevel.equals("ap_ggeoga3")) return 3;
+                else if (RouteLevel.equals("ap_ggeoga4")) return 3;
+                else if (RouteLevel.equals("ap_ggeoga5")) return 2;
+                else if (RouteLevel.equals("ap_youpdol1")) return 2;
+                else if (RouteLevel.equals("ap_youpdol2")) return 3;
+                else if (RouteLevel.equals("ap_youpdol3")) return 3;
+                else if (RouteLevel.equals("ap_youpdol4")) return 3;
+                else if (RouteLevel.equals("ap_youpdol5")) return 4;
+                else if (RouteLevel.equals("ap_youpdol6")) return 4;
+                else if (RouteLevel.equals("ap_youpdol7")) return 2;
+                else if (RouteLevel.equals("ap_youpdol8")) return 4;
+                else if (RouteLevel.equals("ap_youpdol9")) return 4;
                 break;
         }
             return 0;
@@ -7984,8 +8310,86 @@ public class TrainningActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    public boolean onTouchEvent(MotionEvent event) {
+//        Log.e("좌표", " x의값 : " + event.getX() + "Y의 값 : " + event.getY());
+        /*if(GlobalVariable.Global_Difficulty=="R") {
+            trainnigView.ball_cnt++;
+            if(trainnigView.ball_cnt==1) {
+                trainnigView.WballX = event.getX();
+                trainnigView.WballY = event.getY();
+                trainnigView.ballGothread.Wball.setSx(trainnigView.WballX);
+                trainnigView.ballGothread.Wball.setSy(trainnigView.WballY);
+            }
+            if(trainnigView.ball_cnt==2) {
+                trainnigView.YballX = event.getX();
+                trainnigView.YballY = event.getY();
+                trainnigView.ballGothread.Yball.setSx(trainnigView.YballX);
+                trainnigView.ballGothread.Yball.setSy(trainnigView.YballY);
+            }
+            if(trainnigView.ball_cnt==3) {
+                trainnigView.RballX = event.getX();
+                trainnigView.RballY = event.getY();
+                trainnigView.ballGothread.Rball.setSx(trainnigView.RballX);
+                trainnigView.ballGothread.Rball.setSy(trainnigView.RballY);
+                trainnigView.ballGothread.isWait=true;
+                trainnigView.ballGothread.DB_Process(3);
+                trainnigView.ballGothread.isWait=false;
+            }
+//            Log.e("좌표", " x의값 : " + event.getX() + "Y의 값 : " + event.getY());
+            trainnigView.invalidate();
+            return true;
+        }*/
+        return gestureDetector.onTouchEvent(event);
+    }
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        X_down = e1.getX();
+        X_up = e2.getX();
+        Log.e("X_down","X_down"+e1.getX());
+        Log.e("X_up","X_up"+e2.getX());
+
+        if (!isSwiped) {
+            if ((X_down - X_up) < 30) {
+                Log.e("제스쳐 작동","1");
+                trainnigView.ballGothread.isWait=false;
+                variable_uiselect.setVisibility(View.INVISIBLE);
+                isSwiped = !isSwiped;
+            }
+        } else {
+            if ((X_down - X_up) > 30) {
+                Log.e("제스쳐 작동","2");
+                trainnigView.ballGothread.isWait=true;
+                variable_uiselect.setVisibility(View.VISIBLE);
+                isSwiped = !isSwiped;
+            }
+        }
+        return true;
+    }
+    @Override
+    public boolean onDown(MotionEvent e) {
+
+        return false;
+    }
+    @Override
+    public void onShowPress(MotionEvent e) {
 
     }
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        return false;
+    }
+    @Override
+    public void onLongPress(MotionEvent e) {
+
+    }
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        return false;
+    }
+
+
 }
 
 

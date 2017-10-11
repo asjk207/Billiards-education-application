@@ -8,11 +8,27 @@ import android.app.Application;
 //Activity 간의 전역변수
 public class GlobalVariable extends Application {
 
+    //DB 문제 변수
+    public static int DBcasenum=1;
+    public static double wratio=0.0;
+    public static double hratio=0.0;
+    public static boolean ReverseX=false;
+    public static boolean ReverseY=false;
+
+    public static int BposX=0;
+    public static int BposY=0;
+
+
+    public static int screenwidth;
+    public static int screenheight;
+
+
     public static boolean linevisible=false;
     public static boolean BallGoDraw=false;
 
     public static String casekinds;
     public static int casenum=1;
+
     //교본에서 유투브로 casenum전달 변수
     public static int CourseBook_Youtube_Casenum = 1;
     //유투브 교본 구별 변수 1=교본 0=훈련
@@ -23,6 +39,27 @@ public class GlobalVariable extends Application {
     public static int whiteball=0;
     public static int yellowball=0;
     public static int redball=0;
+    //유저,비회원 구분 변수
+    public static boolean User=false;
+    //유저 ID,Password변수
+    public static String ID;
+    public static String Password;
+    //유저 오답카운트/정답카운트
+    public static int right_cnt;  //전체적인 정답수
+    public static int wrong_cnt;  //전체적인 오답수
+    public static int sidespin_right_cnt;
+    public static int sidespin_wrong_cnt;
+    public static int frontspin_right_cnt;
+    public static int frontspin_wrong_cnt;
+    public static int backspin_right_cnt;
+    public static int backspin_wrong_cnt;
+    public static int bitgyou_right_cnt;
+    public static int bitgyou_wrong_cnt;
+    public static int ggeoga_right_cnt;
+    public static int ggeoga_wrong_cnt;
+    public static int traverse_right_cnt;
+    public static int traverse_wrong_cnt;
+
 
     public static int casecount;
 

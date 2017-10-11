@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 public class Route extends AppCompatActivity {
@@ -23,7 +25,78 @@ public class Route extends AppCompatActivity {
         Level=route_intent.getStringExtra("Menu_Route");
         Log.e("",""+Level);
 
-
+        final ImageButton Sidespin_Button = (ImageButton)findViewById(R.id.button_sidespin);
+        Sidespin_Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    Sidespin_Button.setImageResource(R.drawable.sidespin_pressed);
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
+                    Sidespin_Button.setImageResource(R.drawable.sidespin);
+                }
+                return false;
+            }
+        });
+        final ImageButton Backspin_Button = (ImageButton)findViewById(R.id.button_backspin);
+        Backspin_Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    Backspin_Button.setImageResource(R.drawable.backspin_pressed);
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
+                    Backspin_Button.setImageResource(R.drawable.backspin);
+                }
+                return false;
+            }
+        });
+        final ImageButton Frontspin_Button = (ImageButton)findViewById(R.id.button_frontspin);
+        Frontspin_Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    Frontspin_Button.setImageResource(R.drawable.frontspin_pressed);
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
+                    Frontspin_Button.setImageResource(R.drawable.frontspin);
+                }
+                return false;
+            }
+        });
+        final ImageButton Scratch_Button = (ImageButton)findViewById(R.id.button_scratch);
+        Scratch_Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    Scratch_Button.setImageResource(R.drawable.scratch_pressed);
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
+                    Scratch_Button.setImageResource(R.drawable.scratch);
+                }
+                return false;
+            }
+        });
+        final ImageButton Ggeoga_Button = (ImageButton)findViewById(R.id.button_hang);
+        Ggeoga_Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    Ggeoga_Button.setImageResource(R.drawable.ggeoga_pressed);
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
+                    Ggeoga_Button.setImageResource(R.drawable.ggeoga);
+                }
+                return false;
+            }
+        });
+        final ImageButton Traverse_Button = (ImageButton)findViewById(R.id.button_traverse);
+        Traverse_Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    Traverse_Button.setImageResource(R.drawable.traverse_pressed);
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
+                    Traverse_Button.setImageResource(R.drawable.traverse);
+                }
+                return false;
+            }
+        });
     }
 
     public void onClick(View view){
@@ -51,7 +124,7 @@ public class Route extends AppCompatActivity {
                     startActivity(Menu_Intent);
                 }
                 else{
-                    if(GlobalVariable.Global_Difficulty.equals("B")) Level_intent.putExtra("ROUTE","bp_dwipdol");
+                    if(GlobalVariable.Global_Difficulty.equals("B")) Level_intent.putExtra("ROUTE","bp_dwidol");
                     else if(GlobalVariable.Global_Difficulty.equals("A")) Level_intent.putExtra("ROUTE","ap_dwidol");
                     Level_intent.addFlags(Level_intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(Level_intent);
