@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -167,6 +168,116 @@ public class Level extends AppCompatActivity {
                 levelButton[8].setEnabled(true);
                 break;
         }
+
+        final ImageButton LV1_Button = (ImageButton)findViewById(R.id.lv1);
+        LV1_Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    LV1_Button.setImageResource(R.drawable.lv1_pressed);
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
+                    LV1_Button.setImageResource(R.drawable.lv1);
+                }
+                return false;
+            }
+        });
+        final ImageButton LV2_Button = (ImageButton)findViewById(R.id.lv2);
+        LV2_Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    LV2_Button.setImageResource(R.drawable.lv2_pressed);
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
+                    LV2_Button.setImageResource(R.drawable.lv2);
+                }
+                return false;
+            }
+        });
+        final ImageButton LV3_Button = (ImageButton)findViewById(R.id.lv3);
+        LV3_Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    LV3_Button.setImageResource(R.drawable.lv3_pressed);
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
+                    LV3_Button.setImageResource(R.drawable.lv3);
+                }
+                return false;
+            }
+        });
+        final ImageButton LV4_Button = (ImageButton)findViewById(R.id.lv4);
+        LV4_Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    LV4_Button.setImageResource(R.drawable.lv4_pressed);
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
+                    LV4_Button.setImageResource(R.drawable.lv4);
+                }
+                return false;
+            }
+        });
+        final ImageButton LV5_Button = (ImageButton)findViewById(R.id.lv5);
+        LV5_Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    LV5_Button.setImageResource(R.drawable.lv5_pressed);
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
+                    LV5_Button.setImageResource(R.drawable.lv5);
+                }
+                return false;
+            }
+        });
+        final ImageButton LV6_Button = (ImageButton)findViewById(R.id.lv6);
+        LV6_Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    LV6_Button.setImageResource(R.drawable.lv6_pressed);
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
+                    LV6_Button.setImageResource(R.drawable.lv6);
+                }
+                return false;
+            }
+        });
+        final ImageButton LV7_Button = (ImageButton)findViewById(R.id.lv7);
+        LV7_Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    LV7_Button.setImageResource(R.drawable.lv7_pressed);
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
+                    LV7_Button.setImageResource(R.drawable.lv7);
+                }
+                return false;
+            }
+        });
+        final ImageButton LV8_Button = (ImageButton)findViewById(R.id.lv8);
+        LV8_Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    LV8_Button.setImageResource(R.drawable.lv8_pressed);
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
+                    LV8_Button.setImageResource(R.drawable.lv8);
+                }
+                return false;
+            }
+        });
+        final ImageButton LV9_Button = (ImageButton)findViewById(R.id.lv9);
+        LV9_Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    LV9_Button.setImageResource(R.drawable.lv9_pressed);
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
+                    LV9_Button.setImageResource(R.drawable.lv9);
+                }
+                return false;
+            }
+        });
+
 
     }
     public void onClick(View view){

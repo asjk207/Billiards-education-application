@@ -23,7 +23,7 @@ import android.view.View;
 public class TrainnigView extends SurfaceView implements SurfaceHolder.Callback{
     BallGothread ballGothread;
 
-
+    public boolean promode;
     int width, height;
     Context context;
     SurfaceHolder holder;
@@ -33,9 +33,19 @@ public class TrainnigView extends SurfaceView implements SurfaceHolder.Callback{
 
     Bitmap Board;
 
+    //볼 검색 카운트
+    int ball_cnt=0;
+    float WballX;
+    float WballY;
+    float YballX;
+    float YballY;
+    float RballX;
+    float RballY;
+
 
     public TrainnigView(Context C, AttributeSet attrs){
         super(C, attrs);
+
         /*//터치 스크린 초점 맞추기
         this.requestFocus();
         this.setFocusableInTouchMode(true);*/
@@ -52,6 +62,10 @@ public class TrainnigView extends SurfaceView implements SurfaceHolder.Callback{
 
         init();
     }
+    public void setScreenSize(int width, int height){
+        this.width=width;
+        this.height=height;
+    }
 
     public void init(){
         holder =getHolder();
@@ -60,41 +74,63 @@ public class TrainnigView extends SurfaceView implements SurfaceHolder.Callback{
         ballGothread = new BallGothread(context, holder);
 
     }
-
+/*
     @Override
     public boolean onTouchEvent(MotionEvent event){
-        //유저 터치 감지
-        float touchX = event.getX();
-        float touchY = event.getY();
-        Log.e("좌표"," x의값 : "+event.getX()+ "Y의 값 : "+event.getY());
-        invalidate();
+        if(GlobalVariable.Global_Difficulty=="R") {
+            ball_cnt++;
+            if(ball_cnt==1) {
+                WballX = event.getX();
+                WballY = event.getY();
+                ballGothread.Wball.setSx(WballX);
+                ballGothread.Wball.setSy(WballY);
+            }
+            if(ball_cnt==2) {
+                YballX = event.getX();
+                YballY = event.getY();
+                ballGothread.Yball.setSx(YballX);
+                ballGothread.Yball.setSy(YballY);
+            }
+            if(ball_cnt==3) {
+                RballX = event.getX();
+                RballY = event.getY();
+                ballGothread.Rball.setSx(RballX);
+                ballGothread.Rball.setSy(RballY);
+                ballGothread.isWait=true;
+                ballGothread.DB_Process(RballX,RballY,YballX,YballY,WballX,WballY);
+                ballGothread.isWait=false;
+            }
+            Log.e("좌표", " x의값 : " + event.getX() + "Y의 값 : " + event.getY());
+            invalidate();
+        }
         return true;
     }
-
+*/
 
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width,
                                int height) {
         Log.e("**************", "surfaceChanged()");
-        this.width = width;
-        this.height = height;
-        ballGothread.setScreenSize(width, height);
-        Log.e("***************", "widh:"+width+" / height: "+height);
-    }
 
+    }
     @Override
     public void surfaceCreated(SurfaceHolder holder){
-        Log.e("***********","surfaceCreated()");
-        try {
-            //스레드를 시작시킨다.
-            ballGothread.start();
 
-        }catch(Exception e){
-            Log.e("***********","스레드 시작 시 에러 발생! 스레드를 다시 생성");
-            //에러 발생하면 재시작 하기
-            restartThread();
-        }
+        Log.e("***********","surfaceCreated()");
+        ballGothread.setScreenSize(width, height);
+        Log.e("***************", "widh:"+width+" / height: "+height);
+//       if(!(GlobalVariable.Global_Difficulty=="R")) {
+           try {
+               //스레드를 시작시킨다.
+               ballGothread.start();
+           } catch (Exception e) {
+               Log.e("***********", "스레드 시작 시 에러 발생! 스레드를 다시 생성");
+               //에러 발생하면 재시작 하기
+               restartThread();
+           }
+//       }
+
     }
 
     @Override
@@ -104,15 +140,16 @@ public class TrainnigView extends SurfaceView implements SurfaceHolder.Callback{
         boolean tryJoin = true;
         //스레드를 중지시킨다.
 
-
-        /*while(tryJoin){//join이 성공할때까지
+        /*
+        while(tryJoin){//join이 성공할때까지
             try{
                 ballGothread.join();
                 tryJoin=false;
             } catch(Exception e){
 
             }
-        }*/
+        }
+        */
     }
 
 
@@ -124,7 +161,7 @@ public class TrainnigView extends SurfaceView implements SurfaceHolder.Callback{
         //객체 다시 생성
         ballGothread = new BallGothread(context, holder);
         //화면의 폭과 높이 전달
-        ballGothread.setScreenSize(width, height);
+        ballGothread.setScreenSize(width,height);
         //스레드 시작
         ballGothread.start();
     }

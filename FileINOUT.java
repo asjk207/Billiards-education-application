@@ -61,7 +61,9 @@ public class FileINOUT{
         //this.attribute=atrribute;
     }
     public void Ballfileread(Context context){
-        String resName = "@raw/"+GlobalVariable.casekinds+"_"+GlobalVariable.casenum;
+        String resName="";
+        if(!(GlobalVariable.Global_Difficulty=="R")) resName = "@raw/"+GlobalVariable.casekinds+"_"+GlobalVariable.casenum;
+        else if(GlobalVariable.Global_Difficulty=="R") resName = "@raw/pro_db"+GlobalVariable.DBcasenum;
         int resID = context.getResources().getIdentifier(resName, "id", context.getPackageName());
 
 
@@ -109,6 +111,7 @@ public class FileINOUT{
                         }
                         break;
                 }
+
                 str = buffer.readLine();
                 a++;
                 //Log.e("***********", "문자열 삽입 마침 :            " + a);
@@ -171,6 +174,30 @@ public class FileINOUT{
                         threecushion=split[1];
                         break;
                 }
+                if(GlobalVariable.Global_Difficulty=="R"){
+                    switch (a) {
+                        case 16:
+                            if(split[1].equals("true")) GlobalVariable.ReverseX=true;
+                            else if(split[1].equals("false")) GlobalVariable.ReverseX=false;
+                            break;
+                        case 17:
+                            if(split[1].equals("true")) GlobalVariable.ReverseY=true;
+                            else if(split[1].equals("false")) GlobalVariable.ReverseY=false;
+                            break;
+                        case 18:
+                            GlobalVariable.wratio=Double.parseDouble(split[1]);
+                            break;
+                        case 19:
+                            GlobalVariable.hratio=Double.parseDouble(split[1]);
+                            break;
+                        case 20:
+                            GlobalVariable.BposX=Integer.parseInt(split[1]);
+                            break;
+                        case 21:
+                            GlobalVariable.BposY=Integer.parseInt(split[1]);
+                            break;
+                    }
+                }
                 str2 = buffer2.readLine();
                 a++;
             }
@@ -182,7 +209,7 @@ public class FileINOUT{
         Log.e("FILEINOUT",""+onecushion);
     }
 
-    public void InputArray(){
+       public void InputArray(){
         //텍스트에서 Object 형을 받아왔으므로
         // List -> Object[]
         //InitialPoint LIst 형변환
@@ -197,11 +224,11 @@ public class FileINOUT{
         listRBallYArrays = new int[OArrays2.length/2];
         for (i = 0; i < OArrays2.length; i++) {
             if(i%2==0) {
-                listRBallYArrays[c]  = Integer.parseInt(OArrays2[i].toString());
+                listRBallXArrays[c]  = Integer.parseInt(OArrays2[i].toString());
                 c++;
             }
             else if(i%2==1) {
-                listRBallXArrays[d]  = Integer.parseInt(OArrays2[i].toString());
+                listRBallYArrays[d]  = Integer.parseInt(OArrays2[i].toString());
                 d++;
             }
         }
@@ -220,11 +247,11 @@ public class FileINOUT{
 
         for (i = 0; i < OArrays3.length; i++) {
             if(i%2==0) {
-                listYBallYArrays[c]  = Integer.parseInt(OArrays3[i].toString());
+                listYBallXArrays[c]  = Integer.parseInt(OArrays3[i].toString());
                 c++;
             }
             else if(i%2==1) {
-                listYBallXArrays[d]  = Integer.parseInt(OArrays3[i].toString());
+                listYBallYArrays[d]  = Integer.parseInt(OArrays3[i].toString());
                 d++;
             }
         }
@@ -265,7 +292,7 @@ public class FileINOUT{
     }
 
     public int[] getListYBallXArrays(){
-        return listRBallXArrays;
+        return listYBallXArrays;
     }
 
     public int[] getListYBallYArrays(){

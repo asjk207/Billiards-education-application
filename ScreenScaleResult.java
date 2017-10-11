@@ -32,6 +32,11 @@ import android.util.Log;
             this.dtargetwidth=targetwidth;
             this.dtargetheight=targetheight;
         }
+        public void CalcDBScreenRatio(int width, int height){
+            this.Heightratio=((double)targetheight/(double)width);
+            this.Widthratio=((double)targetwidth/(double)height);
+            Log.e("**************", "화면 비율   넓이"+Widthratio+"높이"+Heightratio);
+        }
 
         public void CalcScreenRatio(int width, int height){
             this.Widthratio=(double)targetheight/(double)width;
@@ -39,19 +44,21 @@ import android.util.Log;
             //Log.e("**************", "화면 비율   넓이"+Widthratio+"높이"+Heightratio);
         }
         public void CalcCorrectScreenRatio(int width, int height){
-            this.Widthratio=(double)targetheight/(double)height;
-            this.Heightratio=(double)targetwidth/(double)width;
-            //Log.e("**************", "화면 비율   넓이"+Widthratio+"높이"+Heightratio);
+            this.Heightratio=(double)targetheight/(double)height;
+            this.Widthratio=(double)targetwidth/(double)width;
+            Log.e("**************", "화면 비율   넓이"+Widthratio+"높이"+Heightratio);
         }
+
         //비율과 가로세로 종횡비 바뀜
-        public int getRatioPosX(int y){
+        public float getRatioPosX(float x){
             //Log.e("**************", "비율 맞춘 X좌표 "+(targetwidth-(Heightratio*y)));
-            return (int)(targetwidth-(Heightratio*y));
+            return (float)(Widthratio*x);
         }
-        public int getRatioPosY(int x) {
+        public float getRatioPosY(float y) {
             //Log.e("**************", "비율 맞춘 Y좌표 "+Widthratio*x);
-            return (int)(Widthratio*x);
+            return (float)(Heightratio*y);
         }
+
 
         //비율만 줄임
         public int getRatioPosX2(int x){

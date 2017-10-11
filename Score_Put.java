@@ -108,4 +108,11 @@ public class Score_Put extends AppCompatActivity {
         }
         return super.dispatchTouchEvent(ev);
     }
+
+    public void score_return(View v){
+        Score = 0;
+        Score_Text.setText(Integer.toString(Score));
+        Score_string = null;
+        Score_Result_Intent.putExtra("Score",Score_string);
+    }
 }

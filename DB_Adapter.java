@@ -6,7 +6,24 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ListAdapter;
+import android.widget.SimpleAdapter;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by user on 2017-02-08.
@@ -14,108 +31,249 @@ import android.util.Log;
 
 public class DB_Adapter{
 
-    private static final String DATABASE_NAME = "jaehakiDB";
-    private static final String DATABASE_TABLE = "TB_JAE";
-    private static final int DATABASE_VERSION = 1;
-    private final Context mCtx;
+    String myJSON;
 
-    private DatabaseHelper mDbHelper;
-    private SQLiteDatabase mDb;
+    JSONArray billards = null;
 
-    //생성테이블
-    private static final String DATABASE_CREATE="CREATE TABLE " +DATABASE_TABLE+ "" +
-                " (    ID    INTEGER PRIMARY    KEY AUTOINCREMENT, TIP INTEGER,   PHONE TEXT,    ADDR TEXT,    NAME TEXT)";
+    private static final String TAG_RESULTS="result";
+    private static final String TAG_ID = "ID";
+    private static final String TAG_INIT = "InitialPoint";
+    private static final String TAG_RED = "RedBall";
+    private static final String TAG_YELLOW = "YellowBall";
+    private static final String TAG_WHITE = "WhiteBall";
+    private static final String TAG_CUE = "CueBall";
+    private static final String TAG_TARGET = "TargetBall";
 
-        //테이블  드랍
+    //좌표 정보
+    public List WposXY = new ArrayList();
+    public List RposXY = new ArrayList();
+    public List YposXY = new ArrayList();
+    public List InitialPoint = new ArrayList();
 
-    public static class DatabaseHelper extends SQLiteOpenHelper {
+    public float [] WposX;
+    public float [] WposY;
+    public float [] RposX;
+    public float [] RposY;
+    public float [] YposX;
+    public float [] YposY;
+    public float [] InitialPointArrays;
 
-        DatabaseHelper(Context context) {
-            super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    // 문자열 분할 변수
+    String[] split;
+    String[] split2;
+
+    //DB 처리 상태정보 변수
+    public boolean completeset=false;
+
+
+    public DB_Adapter(){
+
+    }
+
+
+    protected void JSONinputList(){
+        try {
+            JSONObject jsonObj = new JSONObject(myJSON);
+            billards = jsonObj.getJSONArray(TAG_RESULTS);
+            Log.e("***********","Billards.length()"+billards.length());
+            for(int i=0;i<billards.length();i++) {
+                JSONObject c = billards.getJSONObject(i);
+
+
+                String id = c.getString(TAG_ID);
+                String initialpoint = c.getString(TAG_INIT);
+                String whiteball = c.getString(TAG_WHITE);
+                String yellowball = c.getString(TAG_YELLOW);
+                String redball = c.getString(TAG_RED);
+                String cueball = c.getString(TAG_CUE);
+                String targetball = c.getString(TAG_TARGET);
+
+
+
+                    split = initialpoint.split("_");
+                    for (int j = 0; j < split.length; j++) {
+                        String[] split2 = split[j].split("-");
+                        for (int k = 0; k < split2.length; k++) {
+                            InitialPoint.add(split2[k]);
+                        }
+                    }
+
+
+
+
+                    split = whiteball.split("_");
+                    for (int j = 0; j < split.length; j++) {
+                        split2 = split[j].split("-");
+                        for (int k = 0; k < split2.length; k++) {
+                            WposXY.add(split2[k]);
+                        }
+                    }
+                Log.e("***********","JSON WposXY"+WposXY);
+                Log.e("***********","JSON initialpoint"+redball);
+
+
+                split = yellowball.split("_");
+                    for (int j = 0; j < split.length; j++) {
+                        split2 = split[j].split("-");
+                        for (int k = 0; k < split2.length; k++) {
+                            YposXY.add(split2[k]);
+                        }
+                    }
+
+
+                    split = redball.split("_");
+                    for (int j = 0; j < split.length; j++) {
+                        String[] split2 = split[j].split("-");
+                        for (int k = 0; k < split2.length; k++) {
+                            RposXY.add(split2[k]);
+                        }
+                    }
+                }
+                InputArray();
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e("에러 처리","JOSON 에러"+e);
         }
 
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-            //데이터베이스 최초 생성될때 실행 디비가 생성될때 실행된다
-            Log.d("TEST","onCreate DATABSE_CREATE");
-            db.execSQL(DATABASE_CREATE);
+    }
+
+    public void getData(String url, final String ID/*final String RBallposX, final String RBallposY,final String YBallposX,final String YBallposY,final String WBallposX,final String WBallposY*/){
+        class GetDataJSON extends AsyncTask<String, Void, String> {
+            @Override
+            protected String doInBackground(String... params) {
+                String uri = params[0];
+
+                BufferedReader bufferedReader = null;
+                try {
+                    URL url = new URL(uri);
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    con.setRequestMethod("POST");
+                    con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                    con.setDoInput(true);
+                    con.setDoOutput(true);
+
+                    String data = URLEncoder.encode("id", "UTF-8") + "=" + URLEncoder.encode(ID, "UTF-8");
+//                    String data = URLEncoder.encode("wballX", "UTF-8") + "=" + URLEncoder.encode(WBallposX, "UTF-8");
+//                    data += "&" + URLEncoder.encode("wbally", "UTF-8") + "=" + URLEncoder.encode(WBallposY, "UTF-8");
+//                    data += "&" + URLEncoder.encode("yballx", "UTF-8") + "=" + URLEncoder.encode(YBallposX, "UTF-8");
+//                    data += "&" + URLEncoder.encode("ybally", "UTF-8") + "=" + URLEncoder.encode(YBallposY, "UTF-8");
+//                    data += "&" + URLEncoder.encode("rballx", "UTF-8") + "=" + URLEncoder.encode(RBallposX, "UTF-8");
+//                    data += "&" + URLEncoder.encode("rbally", "UTF-8") + "=" + URLEncoder.encode(RBallposY, "UTF-8");
+
+                    OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+
+
+                    wr.write(data);
+                    wr.flush();
+                    wr.close();
+
+                    con.setConnectTimeout(10000);
+                    StringBuilder sb = new StringBuilder();
+                    bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    String json;
+                    while((json = bufferedReader.readLine())!= null){
+                        sb.append(json+"\n");
+                    }
+
+                    return sb.toString().trim();
+
+                }catch(Exception e){
+                    Log.e("",""+e.getMessage());
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(String result){
+                Log.e("","받은 데이터"+result);
+                myJSON=result;
+                JSONinputList();
+            }
+        }
+        GetDataJSON g = new GetDataJSON();
+        g.execute(url);
+
+    }
+
+    public void InputArray(){
+        int c = 0;
+        int d = 0;
+        //텍스트에서 Object 형을 받아왔으므로
+        // List -> Object[]
+        //InitialPoint LIst 형변환
+        Object[] OArrays = InitialPoint.toArray(new String[InitialPoint.size()]);
+
+        InitialPointArrays = new float[OArrays.length];
+        for (int i = 0; i < OArrays.length; i++) {
+            InitialPointArrays[i] = Float.parseFloat(OArrays[i].toString());
         }
 
-        @Override
-        //데이터베이스가 업그레이드가 필요할때
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            // db.execSQL( SQL_DELETE_TABLE);
+        //listRBallXY List 형 변환
+        Object[] OArrays2 = RposXY.toArray(new String[RposXY.size()]);
+        RposX = new float[OArrays2.length/2];
+        RposY = new float[OArrays2.length/2];
+        for (int i = 0; i < OArrays2.length; i++) {
+            if(i%2==0) {
+                RposY[c]  = Float.parseFloat(OArrays2[i].toString());
+                c++;
+            }
+            else if(i%2==1) {
+                RposX[d]  = Float.parseFloat(OArrays2[i].toString());
+                d++;
+            }
         }
 
+        c=0;
+        d=0;
+        //listYBallXY List 형 변환
+        Object[] OArrays3 = YposXY.toArray(new String[YposXY.size()]);
+        YposX = new float[OArrays3.length/2];
+        YposY = new float[OArrays3.length/2];
+
+        for (int i = 0; i < OArrays3.length; i++) {
+            if(i%2==0) {
+                YposY[c]  = Float.parseFloat(OArrays3[i].toString());
+                c++;
+            }
+            else if(i%2==1) {
+                YposX[d]  = Float.parseFloat(OArrays3[i].toString());
+                d++;
+            }
+        }
+        c=0;
+        d=0;
+        //listWBallXY List 형 변환
+        Object[] OArrays4 = WposXY.toArray(new String[WposXY.size()]);
+        WposX = new float[(OArrays4.length+1)/2];
+        WposY = new float[(OArrays4.length+1)/2];
+
+        for(int i=0;i<OArrays4.length;i++) {
+            if(i%2==0) {
+                WposX[c]  = Float.parseFloat(OArrays4[i].toString());
+                c++;
+            }
+            else if(i%2==1) {
+                WposY[d]  = Float.parseFloat(OArrays4[i].toString());
+                d++;
+            }
+        }
+        c=0;
+        d=0;
+
+        /*for(i=0;i<InitialPointArrays.length;i++){
+            Log.e("************","초기화 포인트"+InitialPointArrays[i]);
+        }*/
     }
+    public float[] getWposX() { return WposX;}
+    public float[] getWposY() { return WposY;}
+    public float[] getYposX() { return YposX;}
+    public float[] getYposY() { return YposY;}
+    public float[] getRposX() { return RposX;}
+    public float[] getRposY() { return RposY;}
+    public float[] getInitialPoint() { return InitialPointArrays;}
 
-    //
-    public void open() throws SQLException {
-        mDbHelper = new DatabaseHelper(mCtx);
-/*
-    DB가 없다면 onCreate가 호출 후 생성, version이 바뀌었다면 onUpgrade 메소드 호출
-    mDb = mDbHelper.getWritableDatabase();
-*/
-        // 권한부여 읽고 쓰기를 위해
-        mDb = mDbHelper.getWritableDatabase();
-        Log.d("TEST","open");
-    }
-
-    public DB_Adapter(Context ctx) {
-            this.mCtx = ctx;
-    }
-
-    //닫기
-    public void close() {
-        mDbHelper.close();
-    }
-
-
-    //넣기
-    public long insert(int thick,  int tip, float RedX, float RedY,float YellowX, float YellowY ) {
-        ContentValues insertValues = new ContentValues();
-        Log.d("TEST","THICK");
-        Log.d("TEST","TIP");
-
-        insertValues.put("THICK", thick);
-        insertValues.put("TIP", tip);
-        insertValues.put("REDX", RedX);
-        insertValues.put("REDY", RedY);
-        insertValues.put("REDX", YellowX);
-        insertValues.put("REDY", YellowY);
-        Log.d("TEST","insert suc");
-        return mDb.insert(DATABASE_TABLE, null, insertValues);
-    }
-    //업데이트~
-    public long update(int thick, int tip, float RedX, float RedY,float YellowX, float YellowY) {
-        ContentValues updateValues = new ContentValues();
-
-        updateValues.put("THICK", thick);
-        updateValues.put("TIP", tip);
-        updateValues.put("REDX", RedX);
-        updateValues.put("REDY", RedY);
-        updateValues.put("REDX", YellowX);
-        updateValues.put("REDY", YellowY);
-
-        String id=null;
-        return mDb.update(DATABASE_TABLE, updateValues, "ID" + "=?", new String[]{id});
-    }
-
-    //한개씩삭제
-    public boolean deleteRow(String id) {
-        return mDb.delete(DATABASE_TABLE, "ID" + "=?", new String[]{id}) > 0;
-
-    }
-
-    //다삭제
-    public boolean deleteAll() {
-        return mDb.delete(DATABASE_TABLE, null, null) > 0;
-    }
-
-    public Cursor AllRows() {
-        return mDb.query(DATABASE_TABLE, null, null, null, null, null, null);
-
-    }
 
 
 }

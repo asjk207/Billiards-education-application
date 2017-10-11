@@ -32,13 +32,13 @@ public class Score_Result extends AppCompatActivity {
         int Result_Score_yellow;
         int Result_Score_white;
         int Result_Inning_yellow;
-        int Result_Inning_white;
         int Result_Nohit_yellow;
         int Result_Nohit_white;
         int Result_Highrun_yellow;
         int Result_Highrun_white;
         double Result_Average_yellow;
         double Result_Average_white;
+        String Win;
 
         TextView Score_Text_yellow = (TextView)findViewById(R.id.result_score_yellow);
         TextView Score_Text_white = (TextView)findViewById(R.id.result_score_white);
@@ -59,15 +59,23 @@ public class Score_Result extends AppCompatActivity {
         Result_Nohit_yellow = Integer.parseInt(split5[2]);
         Result_Highrun_yellow = Integer.parseInt(split5[3]);
         Result_Score_white = Integer.parseInt(split5[4]);
-        Result_Inning_white = Integer.parseInt(split5[5]);
-        Result_Nohit_white = Integer.parseInt(split5[6]);
-        Result_Highrun_white = Integer.parseInt(split5[7]);
+        Result_Nohit_white = Integer.parseInt(split5[5]);
+        Result_Highrun_white = Integer.parseInt(split5[6]);
+        Win = split5[7];
 
         Result_Average_yellow = (double)Result_Score_yellow/(double)Result_Inning_yellow;
-        Result_Average_white = (double)Result_Score_white/(double)Result_Inning_white;
+        Result_Average_white = (double)Result_Score_white/(double)Result_Inning_yellow;
 
-        if(Result_Score_white > Result_Score_yellow)Win_white.setVisibility(View.VISIBLE);
-        else Win_yellow.setVisibility(View.VISIBLE);
+        if(Win.equals("Yellow")){
+            Win_yellow.setVisibility(View.VISIBLE);
+        }
+        else if(Win.equals("White")){
+            Win_white.setVisibility(View.VISIBLE);
+        }
+        else if(Win.equals("Null")) {
+            if (Result_Score_white > Result_Score_yellow) Win_white.setVisibility(View.VISIBLE);
+            else Win_yellow.setVisibility(View.VISIBLE);
+        }
 
         if(Result_Score_white > Result_Score_yellow)Score_Text_white.setTextColor(Color.RED);
         else Score_Text_yellow.setTextColor(Color.RED);
@@ -80,7 +88,7 @@ public class Score_Result extends AppCompatActivity {
 
         Score_Text_white.setText(Integer.toString(Result_Score_white));
         Score_Text_yellow.setText(Integer.toString(Result_Score_yellow));
-        Inning_Text_white.setText(Integer.toString(Result_Inning_white));
+        Inning_Text_white.setText(Integer.toString(Result_Inning_yellow));
         Inning_Text_yellow.setText(Integer.toString(Result_Inning_yellow));
         Nohit_Text_white.setText(Integer.toString(Result_Nohit_white));
         Nohit_Text_yellow.setText(Integer.toString(Result_Nohit_yellow));
@@ -88,5 +96,9 @@ public class Score_Result extends AppCompatActivity {
         Highrun_Text_yellow.setText(Integer.toString(Result_Highrun_yellow));
         Average_Text_white.setText(Double.toString(Result_Average_white));
         Average_Text_yellow.setText(Double.toString(Result_Average_yellow));
+    }
+
+    public void score_result_check(View v){
+        finish();
     }
 }
